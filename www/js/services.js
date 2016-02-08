@@ -43,7 +43,7 @@ angular.module('starter.services', [])
       lastText: 'Ahm ich kommme doch nicht',
       face: 'img/mike.png',
       parent: 5,
-      left: false
+      right: true
   },
 
       {
@@ -54,14 +54,14 @@ angular.module('starter.services', [])
           parent:5
       },
   {
-      id: 10,
+      id: 11,
       lastText: 'Was willst du nun sagen...',
       face: 'img/ben.png',
       parent:9
   },
 
   {
-      id: 11,
+      id: 12,
       lastText: 'Ka was ich sagen will',
       face: 'img/mike.png',
       parent: 9
@@ -81,12 +81,24 @@ angular.module('starter.services', [])
           });
           return buttons;
       },
-      allIDs: function(id){
+      allIDs: function(id, left){
           var ids = [];
           chats.forEach(function(item){
               if(typeof(id) != 'undefined'){
                   if(id == item.parent){
-                      ids.push(item.id);
+                      if(typeof(item.left) == 'undefined' && typeof(item.right) == 'undefined' ){
+                          ids.push(item.id);
+                      }else{
+                          if(left){
+                              if(typeof(item.left) != 'undefined' && item.left){
+                                  ids.push(item.id);
+                              }
+                          }else{
+                              if(typeof(item.right) != 'undefined' && item.right){
+                                  ids.push(item.id);
+                              }
+                          }
+                      }
                   }
               }else{
                   ids.push(item.id);
@@ -110,7 +122,19 @@ angular.module('starter.services', [])
           var data = [];
           chats.forEach(function(item){
               if(item.parent == id){
-                  data.push(item);
+                  if(typeof(item.left) == 'undefined' && typeof(item.right) == 'undefined' ){
+                      data.push(item);
+                  }else{
+                      if(left){
+                          if(typeof(item.left) != 'undefined' && item.left){
+                              data.push(item);
+                          }
+                      }else{
+                          if(typeof(item.right) != 'undefined' && item.right){
+                              data.push(item);
+                          }
+                      }
+                  }
               }
           });
           return data;

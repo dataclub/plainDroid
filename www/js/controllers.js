@@ -2,10 +2,33 @@ angular.module('starter.controllers', [])
 
 .controller('DashCtrl', function($scope, Chats) {
         $scope.login = function(id, left){
-            //var aa = Array.prototype.indexOf.call($('#button_'+id)[0].parentNode.childNodes, $('#button_'+id)[0]);
+            var aa = Array.prototype.indexOf.call($('#button_'+id)[0].parentNode.childNodes, $('#button_'+id)[0]);
+
+            for(var i=0;i< $('#button_'+id)[0].parentNode.childNodes.length; i++){
+                var node = $('#button_'+id)[0].parentNode.childNodes[i];
+
+                if(typeof(node.getAttribute) == 'function'){
+                    var attr = node.getAttribute('class');
+                    console.log(attr);
+                    if(i>aa){
+                        if(attr != null){
+                            if(attr.indexOf('button-bar') == -1){
+                                $('#button_'+id)[0].parentNode.removeChild(node);
+                            }else{
+                                node.setAttribute('style', 'display: none;');
+                            }
+
+                        }else{
+                            $('#button_'+id)[0].parentNode.removeChild(node);
+                        }
+
+                    }
+                }
+
+            }
+
             if(typeof(left) != 'undefined') {
 
-var childNode = null;
                 var buttonDiv = $('#button_'+id)[0];
                 if (left) {
                     var className = buttonDiv.childNodes[3].className;
@@ -14,13 +37,15 @@ var childNode = null;
                     buttonDiv.childNodes[1].className += " active";
 
                 } else {
-                    className = buttonDiv.childNodes[1].className.replace('active', '');
+                    className = buttonDiv.childNodes[1].className
+                    className = className.replace('active', '');
                     buttonDiv.childNodes[1].className = className;
                     buttonDiv.childNodes[3].className += " active";
                 }
             }
             var chats = Chats.getData(id, left);
-            var ids = Chats.allIDs(id);
+            var ids = Chats.allIDs(id, left);
+            console.log(chats);
             this.chats = chats;
             this.ids = ids;
 
@@ -63,8 +88,11 @@ var childNode = null;
         $(document).ready(function(){
             $('#block_new').waitUntilExists(function(){
                 var thisObject = this;
-                var i=0;
-                setTypedInterval(i, thisObject, $scope.ids, $scope.chats, $scope.chats[0].id, $scope.chats[0].lastText, $scope.chats[0].face, false, null);
+                var i = 0;
+                setTimeout(function() {
+                    setTypedInterval(i, thisObject, $scope.ids, $scope.chats, $scope.chats[0].id, $scope.chats[0].lastText, $scope.chats[0].face, false, null);
+                    return;
+                },1000);
             });
         });
 
@@ -75,10 +103,8 @@ var childNode = null;
             console.log(afterElem);
             if(isButton){
                 console.log($('#button_'+id));
-                $('#button_'+id).waitUntilExists(function(){
-                    $('#button_'+id)[0].setAttribute('style', '');
-                    return null;
-                });
+
+                $('#button_'+id)[0].setAttribute('style', '');
                 return null;
             }
 
@@ -93,12 +119,12 @@ var childNode = null;
             thisBlock.parentNode.appendChild(e);
 
             setTimeout(function(){
-                if(chats.length > i+1) {
+                if(chats.length >= i+1) {
                     var iID= ids[i+1];
                     setTypedInterval(i+1, thisBlock, ids, chats, iID, chats[i+1].lastText, chats[i+1].face, chats[i+1].isButton);
                     i++;
                 }else{return;}
-            }, 2000);
+            }, 1000);
 
 
 
