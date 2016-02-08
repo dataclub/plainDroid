@@ -3,6 +3,22 @@ angular.module('starter.controllers', [])
 .controller('DashCtrl', function($scope, Chats) {
         $scope.login = function(id, left){
             //var aa = Array.prototype.indexOf.call($('#button_'+id)[0].parentNode.childNodes, $('#button_'+id)[0]);
+            if(typeof(left) != 'undefined') {
+
+var childNode = null;
+                var buttonDiv = $('#button_'+id)[0];
+                if (left) {
+                    var className = buttonDiv.childNodes[3].className;
+                    className = className.replace('active', '');
+                    buttonDiv.childNodes[3].className = className;
+                    buttonDiv.childNodes[1].className += " active";
+
+                } else {
+                    className = buttonDiv.childNodes[1].className.replace('active', '');
+                    buttonDiv.childNodes[1].className = className;
+                    buttonDiv.childNodes[3].className += " active";
+                }
+            }
             var chats = Chats.getData(id, left);
             var ids = Chats.allIDs(id);
             this.chats = chats;
