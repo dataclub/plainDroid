@@ -20,52 +20,84 @@ angular.module('starter.services', [])
       {
           id: 5 ,
           isButton: true,
-          firstText: 'Willst du?',
-          secondText: 'Oder nicht?',
+          firstText: 'Ja ich bins.',
+          secondText: 'Nein hier ist niemand.',
           face: 'img/ben.png'
       },
   {
       id: 6,
-      lastText: 'Ne bin noch nicht da?',
+      lastText: 'Wer bist du?',
       face: 'img/ben.png',
-      parent:5
+      parent:5,
+      left: true
   },
 
   {
       id: 7,
-      lastText: 'Ok mom cich komme',
+      lastText: 'Ich will zu dir',
       face: 'img/mike.png',
       parent: 5,
       left: true
   },
   {
       id: 8,
-      lastText: 'Ahm ich kommme doch nicht',
+      lastText: 'Wie da ist niemand?',
       face: 'img/mike.png',
       parent: 5,
       right: true
   },
+      {
+          id: 9,
+          lastText: 'Wer spricht dann mit mir?',
+          face: 'img/ben.png',
+          parent:5,
+          right: true
+      },
 
       {
-          id: 9 ,
+          id: 10 ,
           isButton: true,
-          firstText: 'Uhaaa?',
+          firstText: 'Ahmm.....?',
           secondText: 'Im Ernst?',
-          parent:5
+          parent:5,
+          left: true
+      },
+      {
+          id: 11 ,
+          isButton: true,
+          firstText: 'Lol?',
+          secondText: 'Neee?',
+          parent:5,
+          right: true
       },
   {
-      id: 11,
-      lastText: 'Was willst du nun sagen...',
+      id: 12,
+      lastText: 'Ja genau dich mein ich!',
       face: 'img/ben.png',
-      parent:9
+      parent:10,
+      left: true
+  },
+  {
+      id: 13,
+      lastText: 'Dieser Text kommt in beiden Fällen!!! Nur für Ahmm... bzw. Im Ernst?',
+      face: 'img/ben.png',
+      parent:10
   },
 
   {
-      id: 12,
-      lastText: 'Ka was ich sagen will',
+      id: 14,
+      lastText: 'Ka was ich sagen soll. Was soll Lol heißen?',
       face: 'img/mike.png',
-      parent: 9
+      parent: 11,
+      left: true
   },
+      {
+          id: 15,
+          lastText: 'Ka was ich sagen soll. Was soll Nee heißen?',
+          face: 'img/mike.png',
+          parent: 11,
+          right: true
+      },
   ];
 
   return {
