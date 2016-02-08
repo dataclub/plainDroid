@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title></title>
+
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+    <link href="css/ionic.app.css" rel="stylesheet">
+    -->
+
+    <!-- ionic/angularjs js -->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
+
+    <!-- your app's js -->
+    <script src="js/app.js"></script>
+    <script src="js/controllers.js"></script>
+    <script src="js/services.js"></script>
+      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+      <script src="js/typed.js"></script>
+      <script>
+          $(function(){
+
+              $("#typed").typed({
+                  // strings: ["Typed.js is a <strong>jQuery</strong> plugin.", "It <em>types</em> out sentences.", "And then deletes them.", "Try it out!"],
+                  stringsElement: $('#typed-strings'),
+                  typeSpeed: 30,
+                  backDelay: 500,
+                  loop: false,
+                  contentType: 'html', // or text
+                  // defaults to false for infinite loop
+                  loopCount: false,
+                  callback: function(){ foo(); },
+                  resetCallback: function() { newTyped(); }
+              });
+
+              $(".reset").click(function(){
+                  $("#typed").typed('reset');
+              });
+
+          });
+
+          function newTyped(){ /* A new typed object */ }
+
+          function foo(){ console.log("Callback"); }
+
+      </script>
+
+      <script>
+          (function ($) {
+
+              /**
+               * @function
+               * @property {object} jQuery plugin which runs handler function once specified element is inserted into the DOM
+               * @param {function} handler A function to execute at the time when the element is inserted
+               * @param {bool} shouldRunHandlerOnce Optional: if true, handler is unbound after its first invocation
+               * @example $(selector).waitUntilExists(function);
+               */
+
+              $.fn.waitUntilExists	= function (handler, shouldRunHandlerOnce, isChild) {
+                  var found	= 'found';
+                  var $this	= $(this.selector);
+                  var $elements	= $this.not(function () { return $(this).data(found); }).each(handler).data(found, true);
+
+                  if (!isChild)
+                  {
+                      (window.waitUntilExists_Intervals = window.waitUntilExists_Intervals || {})[this.selector] =
+                              window.setInterval(function () { $this.waitUntilExists(handler, shouldRunHandlerOnce, true); }, 500)
+                      ;
+                  }
+                  else if (shouldRunHandlerOnce && $elements.length)
+                  {
+                      window.clearInterval(window.waitUntilExists_Intervals[this.selector]);
+                  }
+
+                  return $this;
+              }
+
+          }(jQuery));
+
+
+      </script>
+      <script>
+          $(function(){
+              $(".element").typed({
+                  strings: ["First sentence.", "Second sentence."],
+                  typeSpeed: 0
+              });
+          });
+      </script>
+  </head>
+  <body ng-app="starter">
+
+    <!--
+      The nav bar that will be updated as we navigate between views.
+    -->
+
+    <!--
+      The views will be rendered in the <ion-nav-view> directive below
+      Templates are in the /templates folder (but you could also
+      have templates inline in this html file if you'd like).
+    -->
+    <ion-nav-view></ion-nav-view>
+  </body>
+</html>

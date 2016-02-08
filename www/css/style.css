@@ -1,0 +1,82 @@
+/* Empty. Add your own CSS if you like */
+.tabs-top > .tabs, .tabs.tabs-top
+{
+    top: 0px;
+}
+
+.item, .item h1, .item h2, .item h3, .item h4, .item h5, .item h6, .item p, .item-content, .item-content h1, .item-content h2, .item-content h3, .item-content h4, .item-content h5, .item-content h6, .item-content p
+{
+    white-space: normal;
+}
+
+
+
+
+
+
+
+
+
+/* code for animated blinking cursor */
+.typed-cursor{
+    opacity: 1;
+    font-weight: 100;
+    -webkit-animation: blink 0.7s infinite;
+    -moz-animation: blink 0.7s infinite;
+    -ms-animation: blink 0.7s infinite;
+    -o-animation: blink 0.7s infinite;
+    animation: blink 0.7s infinite;
+}
+@-keyframes blink{
+0% { opacity:1; }
+50% { opacity:0; }
+100% { opacity:1; }
+}
+@-webkit-keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}
+@-moz-keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}
+@-ms-keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}
+@-o-keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}
+.nodisplay {
+    display: none;
+}
+
+
+
+
+
+@import url(http://fonts.googleapis.com/css?family=Cutive+Mono);
+
+body {
+    font: 16px/20px 'Cutive Mono', serif;
+}
+
+a {
+    color: #222;
+}
+
+.wrap {
+    width: 500px;
+    margin: 30px auto;
+    text-align: center;
+}
+
+.test {
+    margin-top: 10px;
+    text-align: left;
+}
