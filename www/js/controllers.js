@@ -69,7 +69,7 @@ angular.module('starter.controllers', [])
             $('#block_new_'+id).waitUntilExists(function(){
                 var thisObject = this;
                 var i=0;
-                setTypedInterval(i, thisObject, ids, chats, chats[0].id, chats[0].lastText, chats[0].face, chats[0].color, false, this);
+                setTypedInterval(i, thisObject, ids, chats, chats[0].id, chats[0].lastText, chats[0].face, chats[0].className, false, this);
             });
 
         };
@@ -96,7 +96,7 @@ angular.module('starter.controllers', [])
                 }
 
                 setTimeout(function() {
-                    setTypedInterval(i, thisObject, $scope.ids, $scope.chats, $scope.chats[0].id, $scope.chats[0].lastText, $scope.chats[0].face, $scope.chats[0].color, false, null);
+                    setTypedInterval(i, thisObject, $scope.ids, $scope.chats, $scope.chats[0].id, $scope.chats[0].lastText, $scope.chats[0].face, $scope.chats[0].className, false, null);
                     return;
                 },  timeOut);
             });
@@ -104,22 +104,31 @@ angular.module('starter.controllers', [])
 
 
 
-        function setTypedInterval(i, thisBlock, ids, chats, id, lastText, face, color, isButton, afterElem){
+        function setTypedInterval(i, thisBlock, ids, chats, id, lastText, face, className, isButton, afterElem){
             if(isButton){
                 $('#button_'+id)[0].setAttribute('style', '');
                 console.log("as");
                 console.log(chats[i]);
-                $scope.login(id, chats[i].clicked == 'left');
+
+                if(typeof(chats[i]) != 'undefined' && typeof(chats[i].clicked) != 'undefined'){
+                    $scope.login(id, chats[i].clicked == 'left');
+                }
+
                 return null;
             }
 
             var bla = thisBlock.outerHTML;
             bla = bla.replace('display: none;', '');
             bla = bla.replace('chat.face', face);
-            bla = bla.replace('chat.color', color);
             bla = bla.replace('chat.lastText', lastText);
             bla = bla.replace('chat.id', id);
             bla = bla.replace('block_new', 'block_new_'+id);
+
+            if(typeof(className) == 'undefined'){
+                bla = bla.replace('chat.className', '');
+            }else{
+                bla = bla.replace('chat.className', className);
+            }
 
             var e = document.createElement('div');
             e.innerHTML = bla;
@@ -128,7 +137,6 @@ angular.module('starter.controllers', [])
                 childNode.getElementsByTagName('img')[0].parentNode.removeChild(childNode.getElementsByTagName('img')[0]);
             }
 
-            console.log(childNode);
             thisBlock.parentNode.appendChild(childNode);
 
 
@@ -147,7 +155,7 @@ angular.module('starter.controllers', [])
                 setTimeout(function(){
                     if(chats.length >= i+1) {
                         var iID= ids[i+1];
-                        setTypedInterval(i+1, thisBlock, ids, chats, iID, chat.lastText, chat.face, chat.color, chat.isButton);
+                        setTypedInterval(i+1, thisBlock, ids, chats, iID, chat.lastText, chat.face, chat.className, chat.isButton);
                         i++;
                     }else{return;}
                 }, timeOut);
