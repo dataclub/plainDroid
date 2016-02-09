@@ -86,10 +86,19 @@ angular.module('starter.controllers', [])
             $('#block_new').waitUntilExists(function(){
                 var thisObject = this;
                 var i = 0;
+                var timeOut = 1000;
+                if(typeof($scope.chats[0].wait) != 'undefined'){
+                    timeOut = $scope.chats[0].wait;
+                }
+
+                if(typeof($scope.chats[0].readed) != 'undefined' && $scope.chats[0].readed == true){
+                    timeOut = 0;
+                }
+
                 setTimeout(function() {
                     setTypedInterval(i, thisObject, $scope.ids, $scope.chats, $scope.chats[0].id, $scope.chats[0].lastText, $scope.chats[0].face, $scope.chats[0].color, false, null);
                     return;
-                },1000);
+                },  timeOut);
             });
         });
 
@@ -98,6 +107,9 @@ angular.module('starter.controllers', [])
         function setTypedInterval(i, thisBlock, ids, chats, id, lastText, face, color, isButton, afterElem){
             if(isButton){
                 $('#button_'+id)[0].setAttribute('style', '');
+                console.log("as");
+                console.log(chats[i]);
+                $scope.login(id, chats[i].clicked == 'left');
                 return null;
             }
 
@@ -119,15 +131,27 @@ angular.module('starter.controllers', [])
             console.log(childNode);
             thisBlock.parentNode.appendChild(childNode);
 
-            setTimeout(function(){
-                if(chats.length >= i+1) {
-                    var iID= ids[i+1];
-                    setTypedInterval(i+1, thisBlock, ids, chats, iID, chats[i+1].lastText, chats[i+1].face, chats[i+1].color, chats[i+1].isButton);
-                    i++;
-                }else{return;}
-            }, 1000);
 
+            var chat = chats[i+1];
+            if(chats.length >= i+1 && typeof(chat) != 'undefined') {
+                var timeOut = 1000;
 
+                if(typeof(chat.wait) != 'undefined'){
+                    timeOut = chat.wait;
+                }
+
+                if(typeof(chat.readed) != 'undefined' && chat.readed == true){
+                    timeOut = 0;
+                }
+
+                setTimeout(function(){
+                    if(chats.length >= i+1) {
+                        var iID= ids[i+1];
+                        setTypedInterval(i+1, thisBlock, ids, chats, iID, chat.lastText, chat.face, chat.color, chat.isButton);
+                        i++;
+                    }else{return;}
+                }, timeOut);
+            }else{return;}
 
             /*
                 setTimeout(function(){
