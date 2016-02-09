@@ -9,7 +9,6 @@ angular.module('starter.controllers', [])
 
                 if(typeof(node.getAttribute) == 'function'){
                     var attr = node.getAttribute('class');
-                    console.log(attr);
                     if(i>aa){
                         if(attr != null){
                             if(attr.indexOf('button-bar') == -1){
@@ -45,14 +44,12 @@ angular.module('starter.controllers', [])
             }
             var chats = Chats.getData(id, left);
             var ids = Chats.allIDs(id, left);
-            console.log(chats);
             this.chats = chats;
             this.ids = ids;
 
             var list = $('#list_new')[0].outerHTML;
             list = list.replace('id="list_new"', 'id="list_new_'+id+'"');
 
-            console.log(id);
             var e = document.createElement('div');
             e.innerHTML = list;
 
@@ -66,13 +63,13 @@ angular.module('starter.controllers', [])
 
 
             e.childNodes[0].childNodes[0].innerHTML = item;
-
-            $('#button_'+id)[0].parentNode.insertBefore(e, $('#button_'+id)[0].nextSibling);
+            var childNode = e.childNodes[0];
+            $('#button_'+id)[0].parentNode.insertBefore(childNode, $('#button_'+id)[0].nextSibling);
 
             $('#block_new_'+id).waitUntilExists(function(){
                 var thisObject = this;
                 var i=0;
-                setTypedInterval(i, thisObject, ids, chats, chats[0].id, chats[0].lastText, chats[0].face, false, this);
+                setTypedInterval(i, thisObject, ids, chats, chats[0].id, chats[0].lastText, chats[0].face, chats[0].color, false, this);
             });
 
         };
@@ -90,7 +87,7 @@ angular.module('starter.controllers', [])
                 var thisObject = this;
                 var i = 0;
                 setTimeout(function() {
-                    setTypedInterval(i, thisObject, $scope.ids, $scope.chats, $scope.chats[0].id, $scope.chats[0].lastText, $scope.chats[0].face, false, null);
+                    setTypedInterval(i, thisObject, $scope.ids, $scope.chats, $scope.chats[0].id, $scope.chats[0].lastText, $scope.chats[0].face, $scope.chats[0].color, false, null);
                     return;
                 },1000);
             });
@@ -98,12 +95,8 @@ angular.module('starter.controllers', [])
 
 
 
-        function setTypedInterval(i, thisBlock, ids, chats, id, lastText, face, isButton, afterElem){
-            console.log('AfterElem');
-            console.log(afterElem);
+        function setTypedInterval(i, thisBlock, ids, chats, id, lastText, face, color, isButton, afterElem){
             if(isButton){
-                console.log($('#button_'+id));
-
                 $('#button_'+id)[0].setAttribute('style', '');
                 return null;
             }
@@ -111,17 +104,25 @@ angular.module('starter.controllers', [])
             var bla = thisBlock.outerHTML;
             bla = bla.replace('display: none;', '');
             bla = bla.replace('chat.face', face);
+            bla = bla.replace('chat.color', color);
             bla = bla.replace('chat.lastText', lastText);
             bla = bla.replace('chat.id', id);
+            bla = bla.replace('block_new', 'block_new_'+id);
 
             var e = document.createElement('div');
             e.innerHTML = bla;
-            thisBlock.parentNode.appendChild(e);
+            var childNode = e.childNodes[0];
+            if(face == null){
+                childNode.getElementsByTagName('img')[0].parentNode.removeChild(childNode.getElementsByTagName('img')[0]);
+            }
+
+            console.log(childNode);
+            thisBlock.parentNode.appendChild(childNode);
 
             setTimeout(function(){
                 if(chats.length >= i+1) {
                     var iID= ids[i+1];
-                    setTypedInterval(i+1, thisBlock, ids, chats, iID, chats[i+1].lastText, chats[i+1].face, chats[i+1].isButton);
+                    setTypedInterval(i+1, thisBlock, ids, chats, iID, chats[i+1].lastText, chats[i+1].face, chats[i+1].color, chats[i+1].isButton);
                     i++;
                 }else{return;}
             }, 1000);
