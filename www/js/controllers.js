@@ -164,7 +164,7 @@ angular.module('starter.controllers', [])
                 $ionicScrollDelegate.scrollBottom();
                 return null;
             }
-            $ionicScrollDelegate.scrollBottom();
+
 
             var bla = thisBlock.outerHTML;
             bla = bla.replace('display: none;', '');
@@ -187,7 +187,7 @@ angular.module('starter.controllers', [])
             }
 
             thisBlock.parentNode.appendChild(childNode);
-
+            $ionicScrollDelegate.scrollBottom();
 
             var chat = chats[i+1];
             if(chats.length >= i+1 && typeof(chat) != 'undefined') {
