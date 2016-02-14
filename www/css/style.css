@@ -13,12 +13,19 @@
     top: 50px;
 }
 
-.item > .myText {
+.item > .myTextred {
     color: red;
+    text-align: center;
 }
 
+.item > .myTextblau {
+    color: blue;
+}
 
-
+.item > .myTextblau_center {
+    color: blue;
+    text-align: center;
+}
 
 
 
