@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope, Chats, $ionicModal, $ionicPopup) {
+.controller('DashCtrl', function($scope, Chats, $ionicModal, $ionicPopup, $ionicScrollDelegate) {
         $scope.active = [];
         $scope.setActive = function(id, button) {
             console.log(id);
@@ -124,7 +124,6 @@ angular.module('starter.controllers', [])
         };
         $scope.chats = Chats.all();
         $scope.ids = Chats.allIDs();
-        var ba = Chats.allButtons();
 
         $scope.buttons = Chats.allButtons();
         $scope.remove = function(chat) {
@@ -165,6 +164,7 @@ angular.module('starter.controllers', [])
 
                 return null;
             }
+            $ionicScrollDelegate.scrollBottom();
 
             var bla = thisBlock.outerHTML;
             bla = bla.replace('display: none;', '');
