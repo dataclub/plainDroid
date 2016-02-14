@@ -161,7 +161,7 @@ angular.module('starter.controllers', [])
                     $scope.setActive(id, chats[i].clicked);
                     $scope.login(id, chats[i].clicked == 'left');
                 }
-
+                $ionicScrollDelegate.scrollBottom();
                 return null;
             }
             $ionicScrollDelegate.scrollBottom();
