@@ -1,5 +1,6 @@
 <ion-view view-title="Dashboard">
     <ion-content>
+
         <ion-list id="list_new">
             <ion-item style="display: none;" id="block_new" class="item-remove-animate item-avatar item-icon-right" type="item-text-wrap">
                 <img src="chat.face">
@@ -8,8 +9,8 @@
         </ion-list>
 
         <div class="button-bar" id="button_{{button.id}}" ng-repeat="button in buttons" style="display: none;">
-            <a class="button button-outline button-block button-positive" ng-click="login({{button.id}}, true)">{{button.firstText}}</a>
-            <a class="button button-outline button-block button-positive" ng-click="login({{button.id}}, false)">{{button.secondText}}</a>
+            <a class="button button-outline button-block" ng-class="{'button-positive active': isActive('{{button.id}}', 'left')}" ng-click="clickedButton('{{button.id}}', 'left')">{{button.firstText}}</a>
+            <a class="button button-outline button-block" ng-class="{'button-positive active': isActive('{{button.id}}', 'right')}" ng-click="clickedButton('{{button.id}}', 'right')">{{button.secondText}}</a>
         </div>
 
         <!--ion-list>

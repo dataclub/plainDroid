@@ -1,7 +1,72 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope, Chats) {
+.controller('DashCtrl', function($scope, Chats, $ionicModal, $ionicPopup) {
+        $scope.active = [];
+        $scope.setActive = function(id, button) {
+            console.log(id);
+            this.active[id] = button;
+            this.choosenID = id;
+        };
+        //checks if button was clicked once and is active after that. that means, that the buttons has one active item
+        $scope.existsActiveID = function(id){
+            return Object.keys($scope.active).indexOf(id) != -1;
+        };
+        //checks if button with id and given param for (left or right) is active
+        $scope.isActive = function(id, button) {
+            return button === $scope.active[id];
+        };
+        //Event from view in ng-click of button
+        $scope.clickedButton = function(id, button){
+            if(!this.isActive(id, button) && this.existsActiveID(id)){
+                this.showConfirm(id, button);
+            }else{
+                this.changeStory(id, button);
+            }
+        };
+        //Changing story after clicked button or popup
+        $scope.changeStory = function(id, button){
+            this.setActive(id, button);
+            this.login(id, button == 'left');
+        };
+
+        // Confirm popup code
+        $scope.showConfirm = function(id, button) {
+            var confirmObject = {
+                title: 'Warnung',
+                template: 'Hiermit wird die Story verändert',
+                id: id,
+                button: button
+            };
+            var confirmPopup = $ionicPopup.confirm(confirmObject);
+            confirmPopup.then(function(res) {
+                if(res) {
+                    $scope.changeStory(confirmObject.id, confirmObject.button);
+                    console.log('You clicked on "OK" button');
+                } else {
+                    console.log('You clicked on "Cancel" button');
+                }
+            });
+        };
+
+        /*
+        $scope.showModal = function(id, button){
+            this.modal.show();
+        };
+
+        $ionicModal.fromTemplateUrl('templates/modal.html', {
+            scope: $scope
+        }).then(function(modal) {
+            $scope.modal = modal;
+        });
+
+        $scope.createContact = function(u) {
+            $scope.contacts.push({ name: u.firstName + ' ' + u.lastName });
+            $scope.modal.hide();
+        };
+        */
+
         $scope.login = function(id, left){
+
             var aa = Array.prototype.indexOf.call($('#button_'+id)[0].parentNode.childNodes, $('#button_'+id)[0]);
 
             for(var i=0;i< $('#button_'+id)[0].parentNode.childNodes.length; i++){
@@ -26,22 +91,6 @@ angular.module('starter.controllers', [])
 
             }
 
-            if(typeof(left) != 'undefined') {
-
-                var buttonDiv = $('#button_'+id)[0];
-                if (left) {
-                    var className = buttonDiv.childNodes[3].className;
-                    className = className.replace('active', '');
-                    buttonDiv.childNodes[3].className = className;
-                    buttonDiv.childNodes[1].className += " active";
-
-                } else {
-                    className = buttonDiv.childNodes[1].className
-                    className = className.replace('active', '');
-                    buttonDiv.childNodes[1].className = className;
-                    buttonDiv.childNodes[3].className += " active";
-                }
-            }
             var chats = Chats.getData(id, left);
             var ids = Chats.allIDs(id, left);
             this.chats = chats;
@@ -69,7 +118,7 @@ angular.module('starter.controllers', [])
             $('#block_new_'+id).waitUntilExists(function(){
                 var thisObject = this;
                 var i=0;
-                setTypedInterval(i, thisObject, ids, chats, chats[0].id, chats[0].lastText, chats[0].face, chats[0].className, false, this);
+                setTypedInterval(i, thisObject, ids, chats, chats[0].id, chats[0].lastText, chats[0].face, chats[0].className, false);
             });
 
         };
@@ -96,7 +145,7 @@ angular.module('starter.controllers', [])
                 }
 
                 setTimeout(function() {
-                    setTypedInterval(i, thisObject, $scope.ids, $scope.chats, $scope.chats[0].id, $scope.chats[0].lastText, $scope.chats[0].face, $scope.chats[0].className, false, null);
+                    setTypedInterval(i, thisObject, $scope.ids, $scope.chats, $scope.chats[0].id, $scope.chats[0].lastText, $scope.chats[0].face, $scope.chats[0].className, false);
                     return;
                 },  timeOut);
             });
@@ -104,13 +153,13 @@ angular.module('starter.controllers', [])
 
 
 
-        function setTypedInterval(i, thisBlock, ids, chats, id, lastText, face, className, isButton, afterElem){
+        function setTypedInterval(i, thisBlock, ids, chats, id, lastText, face, className, isButton){
             if(isButton){
                 $('#button_'+id)[0].setAttribute('style', '');
-                console.log("as");
-                console.log(chats[i]);
+
 
                 if(typeof(chats[i]) != 'undefined' && typeof(chats[i].clicked) != 'undefined'){
+                    $scope.setActive(id, chats[i].clicked);
                     $scope.login(id, chats[i].clicked == 'left');
                 }
 

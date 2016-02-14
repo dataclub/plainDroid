@@ -96,8 +96,22 @@
           });
       </script>
   </head>
-  <body ng-app="starter">
+  <body ng-app="starter" class="platform-android">
 
+  <script id="templates/modal.html" type="text/ng-template">
+      <ion-modal-view>
+          <ion-header-bar class="bar bar-header bar-positive">
+              <h1 class="title">Warnung</h1>
+              <button class="button button-clear button-primary ion-android-close" ng-click="modal.hide()"></button>
+          </ion-header-bar>
+          <ion-content class="padding">
+              <div class="button-bar">
+                  <button class="button button-outline button-positive" ng-click="createContact(choosenID)">Create</button>
+                  <button class="button button-outline button-positive" ng-click="createContact(choosenID)">Create</button>
+              </div>
+          </ion-content>
+      </ion-modal-view>
+  </script>
     <!--
       The nav bar that will be updated as we navigate between views.
     -->
