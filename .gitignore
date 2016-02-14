@@ -6,4 +6,5 @@ platforms/
 plugins/
 www/js/data.js
 www/js/data_clicked.js
+config.xml
 www/css/style.css
