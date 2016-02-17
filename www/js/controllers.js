@@ -26,7 +26,7 @@ angular.module('starter.controllers', [])
         //Changing story after clicked button or popup
         $scope.changeStory = function(id, button){
             this.setActive(id, button);
-            this.login(id, button == 'left');
+            this.output(id, button == 'left');
         };
 
         // Confirm popup code
@@ -48,24 +48,8 @@ angular.module('starter.controllers', [])
             });
         };
 
-        /*
-        $scope.showModal = function(id, button){
-            this.modal.show();
-        };
 
-        $ionicModal.fromTemplateUrl('templates/modal.html', {
-            scope: $scope
-        }).then(function(modal) {
-            $scope.modal = modal;
-        });
-
-        $scope.createContact = function(u) {
-            $scope.contacts.push({ name: u.firstName + ' ' + u.lastName });
-            $scope.modal.hide();
-        };
-        */
-
-        $scope.login = function(id, left){
+        $scope.output = function(id, left){
 
             var aa = Array.prototype.indexOf.call($('#button_'+id)[0].parentNode.childNodes, $('#button_'+id)[0]);
 
@@ -122,13 +106,11 @@ angular.module('starter.controllers', [])
             });
 
         };
+
+
         $scope.chats = Chats.all();
         $scope.ids = Chats.allIDs();
-
         $scope.buttons = Chats.allButtons();
-        $scope.remove = function(chat) {
-            Chats.remove(chat);
-        };
 
         $(document).ready(function(){
             $('#block_new').waitUntilExists(function(){
@@ -159,7 +141,7 @@ angular.module('starter.controllers', [])
 
                 if(typeof(chats[i]) != 'undefined' && typeof(chats[i].clicked) != 'undefined'){
                     $scope.setActive(id, chats[i].clicked);
-                    $scope.login(id, chats[i].clicked == 'left');
+                    $scope.output(id, chats[i].clicked == 'left');
                 }
                 $ionicScrollDelegate.scrollBottom();
                 return null;
@@ -210,45 +192,26 @@ angular.module('starter.controllers', [])
                 }, timeOut);
             }else{return;}
 
-            /*
-                setTimeout(function(){
-                    $('#text_'+itemID).typed({
-                        strings: [itemText],
-                        typeSpeed: 30, // typing speed
-                        backDelay: 750, // pause before backspacing
-                        loop: false, // loop on or off (true or false)
-                        loopCount: false, // number of loops, false = infinite
-                        callback: function() {
-                            if(chats.length > itemID+1){
-                                setTypedInterval(chats, chats[itemID+1].id, chats[itemID+1].text);
-                            }
-                        }
-                    });
-                }, 1000);
-                */
         }
     })
 
-.controller('ChatsCtrl', function($scope, Chats) {
+.controller('MapCtrl', function($scope, Chats) {
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
   // listen for the $ionicView.enter event:
-  //
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
+  $scope.$on('$ionicView.enter', function(e) {
+      //TODO: Aktualisiere das Kartenbild der letzten vorhandenen Sequenz
+  });
 
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
-  };
+
 })
 
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
+.controller('MapDetailCtrl', function($scope, $stateParams, Chats) {
   $scope.chat = Chats.get($stateParams.chatId);
 })
 
-.controller('AccountCtrl', function($scope) {
+.controller('SettingsCtrl', function($scope, Chats) {
         $scope.settingsList = [
             { text: "Musik", checked: true },
             { text: "Sound", checked: false }
@@ -263,24 +226,23 @@ angular.module('starter.controllers', [])
 
 
 
-
-        var currentStart = 0
-        $scope.serverSideList = [
-            { text: "Kapitel 1", value: "go" },
-            { text: "Kapitel 2", value: "py" },
-            { text: "Kapitel 3", value: "rb" },
-            { text: "Kapitel 4", value: "jv" }
-        ];
+var chapters = Chats.getChapters();
+        var currentStart = 5;
+        $scope.serverSideList = chapters;
 
         $scope.addServerSideListItem = function(item) {
-            for (var i = currentStart; i < currentStart+20; i++) {
-                $scope.serverSideList.push(item);
-            }
+            $scope.serverSideList.push(item);
 
-            currentStart += 20;
-        }
+        };
 
-        $scope.addServerSideListItem();
+
+        $scope.$on('$ionicView.enter', function(e) {
+            //TODO: Aktualisiere das Geschichtsverlauf nach Wechseln der Tab
+            $scope.addServerSideListItem({ text: "Kapitel "+currentStart, value: "ficken"+currentStart });
+            currentStart++;
+        });
+
+
 
         $scope.data = {
             serverSide: ''
