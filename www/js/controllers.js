@@ -249,7 +249,47 @@ angular.module('starter.controllers', [])
 })
 
 .controller('AccountCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
-  };
-});
+        $scope.settingsList = [
+            { text: "Musik", checked: true },
+            { text: "Sound", checked: false }
+        ];
+
+        $scope.pushNotificationChange = function() {
+            console.log('Push Notification Change', $scope.pushNotification.checked);
+        };
+
+        $scope.pushNotification = { checked: true };
+
+
+
+
+
+        var currentStart = 0
+        $scope.serverSideList = [
+            { text: "Kapitel 1", value: "go" },
+            { text: "Kapitel 2", value: "py" },
+            { text: "Kapitel 3", value: "rb" },
+            { text: "Kapitel 4", value: "jv" }
+        ];
+
+        $scope.addServerSideListItem = function(item) {
+            for (var i = currentStart; i < currentStart+20; i++) {
+                $scope.serverSideList.push(item);
+            }
+
+            currentStart += 20;
+        }
+
+        $scope.addServerSideListItem();
+
+        $scope.data = {
+            serverSide: ''
+        };
+
+        $scope.serverSideChange = function(item) {
+            console.log("Selected Serverside, text:", item.text, "value:", item.value);
+        };
+    })
+
+
+;
