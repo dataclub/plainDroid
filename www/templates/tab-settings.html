@@ -38,11 +38,11 @@
                 Geschichtsverlauf: {{ data.serverSide }}
             </div>
 
-            <ion-radio ng-repeat="item in serverSideList"
+            <ion-radio ng-repeat="item in chapterList"
                        ng-value="item.value"
-                       ng-model="data.serverSide"
-                       ng-change="serverSideChange(item)"
-                       name="server-side">
+                       ng-model="data.chapters"
+                       ng-change="chapterChange(item)"
+                       name="chapter">
                 {{ item.text }} - {{ item.value }}
             </ion-radio>
 

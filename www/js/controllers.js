@@ -1,6 +1,45 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['ionic', 'ngCordova'])
 
-.controller('DashCtrl', function($scope, Chats, $ionicModal, $ionicPopup, $ionicScrollDelegate) {
+.controller('DashCtrl', function($scope, Chats, $ionicModal, $ionicPopup, $ionicScrollDelegate, $cordovaLocalNotification, $ionicPlatform) {
+
+        /*
+        $ionicPlatform.ready(function () {
+            if (ionic.Platform.isWebView()) {
+                $scope.scheduleInstantNotification = function () {
+                    $cordovaLocalNotification.schedule({
+                        id: 1,
+                        title: 'Instant',
+                        text: 'ffff',
+                    }).then(function () {
+                        alert("Instant Notification set");
+                    });
+                };
+                $scope.scheduleInstantNotification();
+            }
+        });
+
+        */
+
+        //console.log($cordovaLocalNotification);
+        //console.log($cordovaLocalNotification2);
+
+
+        $cordovaLocalNotification.scheduledNotification();
+        $cordovaLocalNotification.clickedNotification();
+        $cordovaLocalNotification.updatedNotification();
+        $cordovaLocalNotification.triggeredNotification();
+
+
+
+
+
+
+
+
+
+
+
+
         $scope.active = [];
         $scope.setActive = function(id, button) {
             console.log(id);
@@ -102,7 +141,7 @@ angular.module('starter.controllers', [])
             $('#block_new_'+id).waitUntilExists(function(){
                 var thisObject = this;
                 var i=0;
-                setTypedInterval(i, thisObject, ids, chats, chats[0].id, chats[0].text, chats[0].face, chats[0].className, false);
+                $scope.setTypedInterval(i, thisObject, ids, chats, chats[0].id, chats[0].text, chats[0].face, chats[0].className, false);
             });
 
         };
@@ -126,7 +165,7 @@ angular.module('starter.controllers', [])
                 }
 
                 setTimeout(function() {
-                    setTypedInterval(i, thisObject, $scope.ids, $scope.chats, $scope.chats[0].id, $scope.chats[0].text, $scope.chats[0].face, $scope.chats[0].className, false);
+                    $scope.setTypedInterval(i, thisObject, $scope.ids, $scope.chats, $scope.chats[0].id, $scope.chats[0].text, $scope.chats[0].face, $scope.chats[0].className, false);
                     return;
                 },  timeOut);
             });
@@ -134,7 +173,8 @@ angular.module('starter.controllers', [])
 
 
 
-        function setTypedInterval(i, thisBlock, ids, chats, id, text, face, className, isButton){
+        $scope.setTypedInterval = function(i, thisBlock, ids, chats, id, text, face, className, isButton){
+
             if(isButton){
                 $('#button_'+id)[0].setAttribute('style', '');
 
@@ -144,6 +184,8 @@ angular.module('starter.controllers', [])
                     $scope.output(id, chats[i].clicked == 'left');
                 }
                 $ionicScrollDelegate.scrollBottom();
+                console.log(chats[i]);
+                $cordovaLocalNotification.scheduleNotification({text: '['+chats[i].name + ' wartet auf deine Entscheidung!]', title: chats[i-1].text});
                 return null;
             }
 
@@ -186,7 +228,7 @@ angular.module('starter.controllers', [])
                 setTimeout(function(){
                     if(chats.length >= i+1) {
                         var iID= ids[i+1];
-                        setTypedInterval(i+1, thisBlock, ids, chats, iID, chat.text, chat.face, chat.className, chat.isButton);
+                        $scope.setTypedInterval(i+1, thisBlock, ids, chats, iID, chat.text, chat.face, chat.className, chat.isButton);
                         i++;
                     }else{return;}
                 }, timeOut);
@@ -207,51 +249,34 @@ angular.module('starter.controllers', [])
 
 })
 
+
+
+
+
+
+
 .controller('MapDetailCtrl', function($scope, $stateParams, Chats) {
   $scope.chat = Chats.get($stateParams.chatId);
 })
 
-.controller('SettingsCtrl', function($scope, Chats) {
-        $scope.settingsList = [
-            { text: "Musik", checked: true },
-            { text: "Sound", checked: false }
-        ];
-
-        $scope.pushNotificationChange = function() {
-            console.log('Push Notification Change', $scope.pushNotification.checked);
-        };
-
-        $scope.pushNotification = { checked: true };
 
 
 
 
-var chapters = Chats.getChapters();
-        var currentStart = 5;
-        $scope.serverSideList = chapters;
-
-        $scope.addServerSideListItem = function(item) {
-            $scope.serverSideList.push(item);
-
-        };
-
-
-        $scope.$on('$ionicView.enter', function(e) {
-            //TODO: Aktualisiere das Geschichtsverlauf nach Wechseln der Tab
-            $scope.addServerSideListItem({ text: "Kapitel "+currentStart, value: "ficken"+currentStart });
-            currentStart++;
-        });
 
 
 
-        $scope.data = {
-            serverSide: ''
-        };
+.controller('SettingsCtrl', function($scope, Settings) {
+        $scope.settingsList = Settings.getSettingsList();
+        $scope.pushNotification = Settings.pushNotification;
+        Settings.pushNotificationChanged($scope); //Event
+        $scope.chapterList = Settings.getChapterList();
+        //Settings.addChapterListItem($scope, { text: "Kapitel 1", value: "nlabla "+currentBla });
+        Settings.viewEntered($scope); //Event
+        $scope.data = {chapters: ''};
 
-        $scope.serverSideChange = function(item) {
-            console.log("Selected Serverside, text:", item.text, "value:", item.value);
-        };
-    })
+       Settings.chapterChanged($scope);
+})
 
 
 ;
