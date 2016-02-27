@@ -1,6 +1,12 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['ionic', 'ngCordova'])
 
-.controller('DashCtrl', function($scope, Chats, $ionicModal, $ionicPopup, $ionicScrollDelegate) {
+.controller('DashCtrl', function($scope, Chats, $ionicModal, $ionicPopup, $ionicScrollDelegate, $cordovaLocalNotification, $ionicPlatform) {
+        $cordovaLocalNotification.scheduledNotification();
+        $cordovaLocalNotification.clickedNotification();
+        $cordovaLocalNotification.updatedNotification();
+        $cordovaLocalNotification.triggeredNotification();
+
+
         $scope.active = [];
         $scope.setActive = function(id, button) {
             console.log(id);
@@ -26,7 +32,7 @@ angular.module('starter.controllers', [])
         //Changing story after clicked button or popup
         $scope.changeStory = function(id, button){
             this.setActive(id, button);
-            this.login(id, button == 'left');
+            this.output(id, button == 'left');
         };
 
         // Confirm popup code
@@ -48,24 +54,8 @@ angular.module('starter.controllers', [])
             });
         };
 
-        /*
-        $scope.showModal = function(id, button){
-            this.modal.show();
-        };
 
-        $ionicModal.fromTemplateUrl('templates/modal.html', {
-            scope: $scope
-        }).then(function(modal) {
-            $scope.modal = modal;
-        });
-
-        $scope.createContact = function(u) {
-            $scope.contacts.push({ name: u.firstName + ' ' + u.lastName });
-            $scope.modal.hide();
-        };
-        */
-
-        $scope.login = function(id, left){
+        $scope.output = function(id, left){
 
             var aa = Array.prototype.indexOf.call($('#button_'+id)[0].parentNode.childNodes, $('#button_'+id)[0]);
 
@@ -91,6 +81,8 @@ angular.module('starter.controllers', [])
 
             }
 
+
+
             var chats = Chats.getData(id, left);
             var ids = Chats.allIDs(id, left);
             this.chats = chats;
@@ -107,7 +99,7 @@ angular.module('starter.controllers', [])
             item = item.replace('id="block_new"', 'id="block_new_'+id+'"');
             //item = item.replace('display: none;', '');
             //item = item.replace('chat.face', this.chats[0].face);
-            //item = item.replace('chat.lastText', this.chats[0].lastText);
+            //item = item.replace('chat.text', this.chats[0].text);
             //item = item.replace('chat.id', this.chats[0].id);
 
 
@@ -118,50 +110,56 @@ angular.module('starter.controllers', [])
             $('#block_new_'+id).waitUntilExists(function(){
                 var thisObject = this;
                 var i=0;
-                setTypedInterval(i, thisObject, ids, chats, chats[0].id, chats[0].lastText, chats[0].face, chats[0].className, false);
+                $scope.setTypedInterval(i, thisObject, ids, chats, chats[0].id, chats[0].text, chats[0].face, chats[0].className, false);
             });
 
         };
-        $scope.chats = Chats.all();
-        $scope.ids = Chats.allIDs();
 
-        $scope.buttons = Chats.allButtons();
-        $scope.remove = function(chat) {
-            Chats.remove(chat);
-        };
-
-        $(document).ready(function(){
-            $('#block_new').waitUntilExists(function(){
-                var thisObject = this;
-                var i = 0;
-                var timeOut = 1000;
-                if(typeof($scope.chats[0].wait) != 'undefined'){
-                    timeOut = $scope.chats[0].wait;
-                }
-
-                if(typeof($scope.chats[0].readed) != 'undefined' && $scope.chats[0].readed == true){
-                    timeOut = 0;
-                }
-
-                setTimeout(function() {
-                    setTypedInterval(i, thisObject, $scope.ids, $scope.chats, $scope.chats[0].id, $scope.chats[0].lastText, $scope.chats[0].face, $scope.chats[0].className, false);
-                    return;
-                },  timeOut);
-            });
+        //Synchronize lokalDB with globalDB
+        Chats.synchronizeLocalDB();
+        //Beginn after synchronized localDB with globalDB
+        $("#synchronizeDB[issynched='true']").waitUntilExists(function () {
+            $scope.startGame();
         });
 
+        $scope.startGame = function(){
+            $scope.chats = Chats.all();
+            $scope.ids = Chats.allIDs();
+            $scope.buttons = Chats.allButtons();
 
 
-        function setTypedInterval(i, thisBlock, ids, chats, id, lastText, face, className, isButton){
+            var thisObject = $('#block_new')[0];
+            var i = 0;
+            var timeOut = 1000;
+            if (typeof($scope.chats[0].wait) != 'undefined') {
+                timeOut = $scope.chats[0].wait;
+            }
+
+            if (typeof($scope.chats[0].readed) != 'undefined' && $scope.chats[0].readed == true) {
+                timeOut = 0;
+            }
+
+            setTimeout(function () {
+                $scope.setTypedInterval(i, thisObject, $scope.ids, $scope.chats, $scope.chats[0].id, $scope.chats[0].text, $scope.chats[0].face, $scope.chats[0].className, false);
+                return;
+            }, timeOut);
+
+
+        };
+
+        $scope.setTypedInterval = function(i, thisBlock, ids, chats, id, text, face, className, isButton){
+
             if(isButton){
                 $('#button_'+id)[0].setAttribute('style', '');
 
 
                 if(typeof(chats[i]) != 'undefined' && typeof(chats[i].clicked) != 'undefined'){
                     $scope.setActive(id, chats[i].clicked);
-                    $scope.login(id, chats[i].clicked == 'left');
+                    $scope.output(id, chats[i].clicked == 'left');
                 }
                 $ionicScrollDelegate.scrollBottom();
+                console.log(chats[i]);
+                $cordovaLocalNotification.scheduleNotification({text: '['+chats[i].name + ' wartet auf deine Entscheidung!]', title: chats[i-1].text});
                 return null;
             }
 
@@ -169,7 +167,7 @@ angular.module('starter.controllers', [])
             var bla = thisBlock.outerHTML;
             bla = bla.replace('display: none;', '');
             bla = bla.replace('chat.face', face);
-            bla = bla.replace('chat.lastText', lastText);
+            bla = bla.replace('chat.text', text);
             bla = bla.replace('chat.id', id);
             bla = bla.replace('block_new', 'block_new_'+id);
 
@@ -204,92 +202,54 @@ angular.module('starter.controllers', [])
                 setTimeout(function(){
                     if(chats.length >= i+1) {
                         var iID= ids[i+1];
-                        setTypedInterval(i+1, thisBlock, ids, chats, iID, chat.lastText, chat.face, chat.className, chat.isButton);
+                        $scope.setTypedInterval(i+1, thisBlock, ids, chats, iID, chat.text, chat.face, chat.className, chat.isButton);
                         i++;
                     }else{return;}
                 }, timeOut);
             }else{return;}
 
-            /*
-                setTimeout(function(){
-                    $('#text_'+itemID).typed({
-                        strings: [itemText],
-                        typeSpeed: 30, // typing speed
-                        backDelay: 750, // pause before backspacing
-                        loop: false, // loop on or off (true or false)
-                        loopCount: false, // number of loops, false = infinite
-                        callback: function() {
-                            if(chats.length > itemID+1){
-                                setTypedInterval(chats, chats[itemID+1].id, chats[itemID+1].lastText);
-                            }
-                        }
-                    });
-                }, 1000);
-                */
         }
     })
 
-.controller('ChatsCtrl', function($scope, Chats) {
+.controller('MapCtrl', function($scope, Chats) {
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
   // listen for the $ionicView.enter event:
-  //
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
+  $scope.$on('$ionicView.enter', function(e) {
+      //TODO: Aktualisiere das Kartenbild der letzten vorhandenen Sequenz
+  });
 
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
-  };
+
 })
 
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
+
+
+
+
+
+
+.controller('MapDetailCtrl', function($scope, $stateParams, Chats) {
   $scope.chat = Chats.get($stateParams.chatId);
 })
 
-.controller('AccountCtrl', function($scope) {
-        $scope.settingsList = [
-            { text: "Musik", checked: true },
-            { text: "Sound", checked: false }
-        ];
-
-        $scope.pushNotificationChange = function() {
-            console.log('Push Notification Change', $scope.pushNotification.checked);
-        };
-
-        $scope.pushNotification = { checked: true };
 
 
 
 
 
-        var currentStart = 0
-        $scope.serverSideList = [
-            { text: "Kapitel 1", value: "go" },
-            { text: "Kapitel 2", value: "py" },
-            { text: "Kapitel 3", value: "rb" },
-            { text: "Kapitel 4", value: "jv" }
-        ];
 
-        $scope.addServerSideListItem = function(item) {
-            for (var i = currentStart; i < currentStart+20; i++) {
-                $scope.serverSideList.push(item);
-            }
 
-            currentStart += 20;
-        }
-
-        $scope.addServerSideListItem();
-
-        $scope.data = {
-            serverSide: ''
-        };
-
-        $scope.serverSideChange = function(item) {
-            console.log("Selected Serverside, text:", item.text, "value:", item.value);
-        };
-    })
+.controller('SettingsCtrl', function($scope, Settings) {
+        $scope.settingsList = Settings.getSettingsList();
+        $scope.pushNotification = Settings.pushNotification;
+        Settings.pushNotificationChanged($scope); //Event
+        $scope.chapterList = Settings.getChapterList();
+        //Settings.addChapterListItem($scope, { text: "Kapitel 1", value: "nlabla "+currentBla });
+        Settings.viewEntered($scope); //Event
+        $scope.data = {chapters: ''};
+        Settings.chapterChanged($scope);
+})
 
 
 ;

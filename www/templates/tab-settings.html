@@ -1,4 +1,4 @@
-<ion-view view-title="Account">
+<ion-view view-title="Settings">
   <ion-content>
     <ion-list>
         <div class="list">
@@ -38,43 +38,15 @@
                 Geschichtsverlauf: {{ data.serverSide }}
             </div>
 
-            <ion-radio ng-repeat="item in serverSideList"
+            <ion-radio ng-repeat="item in chapterList"
                        ng-value="item.value"
-                       ng-model="data.serverSide"
-                       ng-change="serverSideChange(item)"
-                       name="server-side">
-                {{ item.text }}
+                       ng-model="data.chapters"
+                       ng-change="chapterChange(item)"
+                       name="chapter">
+                {{ item.text }} - {{ item.value }}
             </ion-radio>
 
         </div>
-        <!--div class="list">
-
-            <a class="item item-icon-left" href="#">
-                <i class="icon ion-email"></i>
-                Check mail
-            </a>
-
-            <a class="item item-icon-left item-icon-right" href="#">
-                <i class="icon ion-chatbubble-working"></i>
-                Call Ma
-                <i class="icon ion-ios-telephone-outline"></i>
-            </a>
-
-            <a class="item item-icon-left" href="#">
-                <i class="icon ion-mic-a"></i>
-                Record album
-    <span class="item-note">
-      Grammy
-    </span>
-            </a>
-
-            <a class="item item-icon-left" href="#">
-                <i class="icon ion-person-stalker"></i>
-                Friends
-                <span class="badge badge-assertive">0</span>
-            </a>
-
-        </div-->
     </ion-list>
   </ion-content>
 </ion-view>
