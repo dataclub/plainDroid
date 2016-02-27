@@ -1,43 +1,10 @@
 angular.module('starter.controllers', ['ionic', 'ngCordova'])
 
 .controller('DashCtrl', function($scope, Chats, $ionicModal, $ionicPopup, $ionicScrollDelegate, $cordovaLocalNotification, $ionicPlatform) {
-
-        /*
-        $ionicPlatform.ready(function () {
-            if (ionic.Platform.isWebView()) {
-                $scope.scheduleInstantNotification = function () {
-                    $cordovaLocalNotification.schedule({
-                        id: 1,
-                        title: 'Instant',
-                        text: 'ffff',
-                    }).then(function () {
-                        alert("Instant Notification set");
-                    });
-                };
-                $scope.scheduleInstantNotification();
-            }
-        });
-
-        */
-
-        //console.log($cordovaLocalNotification);
-        //console.log($cordovaLocalNotification2);
-
-
         $cordovaLocalNotification.scheduledNotification();
         $cordovaLocalNotification.clickedNotification();
         $cordovaLocalNotification.updatedNotification();
         $cordovaLocalNotification.triggeredNotification();
-
-
-
-
-
-
-
-
-
-
 
 
         $scope.active = [];
@@ -114,6 +81,8 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
 
             }
 
+
+
             var chats = Chats.getData(id, left);
             var ids = Chats.allIDs(id, left);
             this.chats = chats;
@@ -146,32 +115,37 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
 
         };
 
-
-        $scope.chats = Chats.all();
-        $scope.ids = Chats.allIDs();
-        $scope.buttons = Chats.allButtons();
-
-        $(document).ready(function(){
-            $('#block_new').waitUntilExists(function(){
-                var thisObject = this;
-                var i = 0;
-                var timeOut = 1000;
-                if(typeof($scope.chats[0].wait) != 'undefined'){
-                    timeOut = $scope.chats[0].wait;
-                }
-
-                if(typeof($scope.chats[0].readed) != 'undefined' && $scope.chats[0].readed == true){
-                    timeOut = 0;
-                }
-
-                setTimeout(function() {
-                    $scope.setTypedInterval(i, thisObject, $scope.ids, $scope.chats, $scope.chats[0].id, $scope.chats[0].text, $scope.chats[0].face, $scope.chats[0].className, false);
-                    return;
-                },  timeOut);
-            });
+        //Synchronize lokalDB with globalDB
+        Chats.synchronizeLocalDB();
+        //Beginn after synchronized localDB with globalDB
+        $("#synchronizeDB[issynched='true']").waitUntilExists(function () {
+            $scope.startGame();
         });
 
+        $scope.startGame = function(){
+            $scope.chats = Chats.all();
+            $scope.ids = Chats.allIDs();
+            $scope.buttons = Chats.allButtons();
 
+
+            var thisObject = $('#block_new')[0];
+            var i = 0;
+            var timeOut = 1000;
+            if (typeof($scope.chats[0].wait) != 'undefined') {
+                timeOut = $scope.chats[0].wait;
+            }
+
+            if (typeof($scope.chats[0].readed) != 'undefined' && $scope.chats[0].readed == true) {
+                timeOut = 0;
+            }
+
+            setTimeout(function () {
+                $scope.setTypedInterval(i, thisObject, $scope.ids, $scope.chats, $scope.chats[0].id, $scope.chats[0].text, $scope.chats[0].face, $scope.chats[0].className, false);
+                return;
+            }, timeOut);
+
+
+        };
 
         $scope.setTypedInterval = function(i, thisBlock, ids, chats, id, text, face, className, isButton){
 
@@ -274,8 +248,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
         //Settings.addChapterListItem($scope, { text: "Kapitel 1", value: "nlabla "+currentBla });
         Settings.viewEntered($scope); //Event
         $scope.data = {chapters: ''};
-
-       Settings.chapterChanged($scope);
+        Settings.chapterChanged($scope);
 })
 
 

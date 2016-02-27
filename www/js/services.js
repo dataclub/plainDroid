@@ -128,22 +128,48 @@ angular.module('starter.services', ['ionic', 'ngCordova'])
     })
 
     .factory('Chats', function () {
-        // Might use a resource here that returns a JSON array
+        var chats = [];
+
         return {
+            /**
+             * Synchronize globalDB with localDB
+             */
             synchronizeLocalDB: function(){
                 //TODO: Synchronize globalDB with localDB
 
                 var root = 'http://plaindroiddb.repair-your-iphone.de/api.php';
                 var table = 'contents';
-
+                var thisObject = this;
                 $.ajax({
                     url: root + '/'+table,
                     method: 'GET'
                 }).then(function(data) {
-                    console.log(data[table].columns);
-                    console.log(data[table].records);
+                    chats = thisObject.toJSON(data[table].columns, data[table].records);
+                    $("#synchronizeDB").attr('issynched', true).trigger('change');;
                 });
 
+            },
+            /**
+             * Convert data from ajax-post to json-object
+              * @param columns
+             * @param records
+             * @returns {Array}
+             */
+            toJSON: function (columns, records) {
+                var jsonObjects = [];
+                records.forEach(function (record) {
+                    var jsonObject = [];
+                    var i = 0;
+                    columns.forEach(function (column) {
+                        jsonObject[column] = record[i];
+                        i++;
+                    });
+
+                    jsonObjects.push(jsonObject);
+                });
+
+
+                return jsonObjects;
             },
             all: function () {
                 return chats;
