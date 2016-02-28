@@ -1,11 +1,40 @@
-angular.module('starter.controllers', ['ionic', 'ngCordova'])
+angular.module('starter.controllers', ['ionic', 'ngCordova', 'ui.bootstrap'])
 
-.controller('DashCtrl', function($scope, Chats, $ionicModal, $ionicPopup, $ionicScrollDelegate, $cordovaLocalNotification, $ionicPlatform) {
+.controller('GameCtrl', function($scope, Chats, Game, $ionicModal, $ionicPopup, $ionicScrollDelegate, $cordovaLocalNotification, $ionicHistory) {
+        /**
+         * Schedulers
+         */
         $cordovaLocalNotification.scheduledNotification();
         $cordovaLocalNotification.clickedNotification();
         $cordovaLocalNotification.updatedNotification();
         $cordovaLocalNotification.triggeredNotification();
 
+
+
+
+        //Synchronize lokalDB with globalDB
+        Game.synchronizeLocalDB();
+        //Beginn after synchronized localDB with globalDB
+        $("#synchronizeDB[issynched='true']").waitUntilExists(function () {
+            $scope.readedChatsList = Game.getReadedChatsList();
+            $scope.data = {chats: ''};
+            Game.viewEntered($scope); //Event
+            Game.chatChanged($scope);
+            Game.addChatListItem($scope, $ionicHistory, { text: "Kapitel 1", value: "nlabla 1" });
+
+            $ionicHistory.clearCache();
+
+
+        });
+
+        $scope.clickedButton = function(id, button){
+            console.log('lol');
+            if(!this.isActive(id, button) && this.existsActiveID(id)){
+                this.showConfirm(id, button);
+            }else{
+                this.changeStory(id, button);
+            }
+        };
 
         $scope.active = [];
         $scope.setActive = function(id, button) {
@@ -19,16 +48,10 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
         };
         //checks if button with id and given param for (left or right) is active
         $scope.isActive = function(id, button) {
-            return button === $scope.active[id];
+            return button === $scope.active[id];        //Event from view in ng-click of button
         };
-        //Event from view in ng-click of button
-        $scope.clickedButton = function(id, button){
-            if(!this.isActive(id, button) && this.existsActiveID(id)){
-                this.showConfirm(id, button);
-            }else{
-                this.changeStory(id, button);
-            }
-        };
+
+
         //Changing story after clicked button or popup
         $scope.changeStory = function(id, button){
             this.setActive(id, button);
@@ -52,6 +75,32 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
                     console.log('You clicked on "Cancel" button');
                 }
             });
+        };
+
+        /**
+         * Gives as output true if there are more than 2 conditions to answer, else it gives false back
+         * @param chatID
+         * @param itemID
+         * @returns {boolean}
+         */
+        $scope.splitButton = function(chatID, itemID){
+            var item = this.readedChatsList[chatID];
+
+            if(item.isButton != '1' || (item.isButton != '1' && item.buttons == null)){
+                return false;
+            }
+
+            //Remove class "item" from ion-item in the list to strech buttons in the page
+            this.buttonsRendered(itemID);
+
+            return Object.keys(this.readedChatsList[chatID].buttons).length > 2;
+        };
+        /**
+         * Execute this function after rendering buttons in the page
+         * @param itemID
+         */
+        $scope.buttonsRendered = function(itemID){
+            $('#ion-item_'+itemID)[0].className = $('#ion-item_'+itemID)[0].className.replace('item', '');
         };
 
 
@@ -115,17 +164,14 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
 
         };
 
-        //Synchronize lokalDB with globalDB
-        Chats.synchronizeLocalDB();
-        //Beginn after synchronized localDB with globalDB
-        $("#synchronizeDB[issynched='true']").waitUntilExists(function () {
-            $scope.startGame();
-        });
+        return;
+
 
         $scope.startGame = function(){
             $scope.chats = Chats.all();
             $scope.ids = Chats.allIDs();
             $scope.buttons = Chats.allButtons();
+            console.log($scope.buttons);
 
 
             var thisObject = $('#block_new')[0];
@@ -240,15 +286,26 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
 
 
 
-.controller('SettingsCtrl', function($scope, Settings) {
+.controller('SettingsCtrl', function($scope, Settings, $ionicHistory) {
+        console.log(3);
+
         $scope.settingsList = Settings.getSettingsList();
         $scope.pushNotification = Settings.pushNotification;
         Settings.pushNotificationChanged($scope); //Event
         $scope.chapterList = Settings.getChapterList();
-        //Settings.addChapterListItem($scope, { text: "Kapitel 1", value: "nlabla "+currentBla });
+        //
         Settings.viewEntered($scope); //Event
         $scope.data = {chapters: ''};
         Settings.chapterChanged($scope);
+
+        Settings.addChapterListItem($scope, $ionicHistory, { text: "Kapitel 1", value: "nlabla 1" });
+        var blaInterval = setInterval(function(){
+            Settings.addChapterListItem($scope, $ionicHistory, { text: "Kapitel 2", value: "nlabla 2" });
+            $ionicHistory.clearCache();
+            clearInterval(blaInterval);
+        }, 2000);
+
+
 })
 
 

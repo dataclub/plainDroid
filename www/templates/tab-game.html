@@ -1,0 +1,51 @@
+<ion-view view-title="Game">
+    <ion-content>
+
+        <ion-list id="list_new">
+
+
+            <ion-item ng-repeat="(itemKey, itemValue) in readedChatsList"
+                      ng-value="itemValue.value"
+                      ng-model="data.chats"
+                      name="game"
+                      ng-class="itemValue.isButton == '1' ? ' blabla ' : (itemValue.face == null ? '' : ' item-avatar item-remove-animate item-icon-right')"
+                      type="item-text-wrap"
+                      id="ion-item_{{itemValue.id}}">
+
+                <img src="{{ itemValue.face }}"
+                     ng-show="itemValue.face != null && itemValue.isButton != '1' && itemValue.readed == '1'">
+
+                <p ng-show="itemValue.isButton != '1' && itemValue.readed == '1'" id="{{ itemValue.id }}"
+                   class="{{ itemValue.className }}">{{ itemValue.text }}</p>
+
+
+                <div class="button-bar" ng-show="itemValue.isButton == '1' && itemValue.readed == '1'">
+                    <div ng-repeat="(buttonKey, buttonValue) in itemValue.buttons"
+                         class="button button-outline button-block"
+                         ng-if="buttonKey < 3">
+                        <a ng-class="{'button-positive active': isActive('{{button.id}}', 'left')}"
+                           ng-click="clickedButton('{{buttonKey}}', 'left')">{{buttonValue}}</a>
+                    </div>
+
+                    <!-- Split-Button -->
+                    <div uib-dropdown is-open="status.isopen" ng-if="splitButton(itemKey, itemValue.id)">
+                        <a class="button button-outline button-block icon ion-navicon" id="single-button_{{itemKey}}"
+                           type="button" class="btn btn-primary" uib-dropdown-toggle ng-disabled="disabled"
+                           ng-click="chatChange('{{itemValue.id}}')"></a>
+                        <ul uib-dropdown-menu role="menu" aria-labelledby="single-button_{{itemKey}}">
+                            <li role="menuitem">
+                                <a href="#"
+                                   ng-click="chatChange('button')"
+                                   ng-repeat="(buttonKey, buttonValue) in itemValue.buttons"
+                                   ng-if="buttonKey > 2">{{buttonValue}}</a></li>
+                            <li class="divider"></li>
+                        </ul>
+                    </div>
+                    <!-- Split-Button-Ends here -->
+
+                </div>
+            </ion-item>
+
+        </ion-list>
+    </ion-content>
+</ion-view>
