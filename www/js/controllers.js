@@ -103,6 +103,13 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ui.bootstrap'])
             $('#ion-item_'+itemID)[0].className = $('#ion-item_'+itemID)[0].className.replace('item', '');
         };
 
+        /**
+         * Exist button-text after given key
+         * @param key
+         */
+        $scope.splitButtonLengthIsMoreThanKey = function(key){
+            return typeof(this.readedChatsList[parseInt(key)+1]) == 'undefined' ? false : true;
+        };
 
         $scope.output = function(id, left){
 
