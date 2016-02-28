@@ -26,8 +26,9 @@
     color: blue;
     text-align: center;
 }
-
-
+.button-bar > .dropdown > .dropdown-menu {
+    left: -130px;
+}
 
 /* code for animated blinking cursor */
 .typed-cursor{

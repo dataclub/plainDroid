@@ -78,6 +78,101 @@ angular.module('starter.services', ['ionic', 'ngCordova'])
             }
         };
     })
+
+    .factory('Game', function(Chats){
+        var chats = [];
+        return {
+            getReadedChatsList: function(){
+                //TODO: Auslesen von der lokalen DB
+                chats.forEach(function(item, index){
+                    if(item.isButton == '1'){
+                        chats[index].buttons = JSON.parse(item.buttons);
+                    }
+                });
+                return chats;
+            },
+            addChatListItem: function($scope, $ionicHistory, item){
+                $scope.readedChatsList.push(item);
+                $ionicHistory.clearCache();
+            },
+            viewEntered: function($scope){
+                $scope.$on('$ionicView.enter', function(e) {
+                    //TODO: Aktualisiere das Geschichtsverlauf nach Wechseln der Tab
+                    //TODO: Kapitels auslesen anhand des lokalen DBs
+                    //$scope.addChapterListItem({ text: "Kapitel "+currentStart, value: "ficken"+currentStart });
+                    //currentStart++;
+                });
+            },
+            chatChanged: function($scope){
+                $scope.chatChange = function(item) {
+                    console.log("Selected Chats, text:", item.text, "value:", item.value);
+                };
+            },
+
+            /**
+             * Synchronize globalDB with localDB
+             */
+            synchronizeLocalDB: function(){
+                var root = 'http://plaindroiddb.repair-your-iphone.de/api.php';
+                var table = 'contents';
+                var thisObject = this;
+                $.ajax({
+                    url: root + '/'+table,
+                    method: 'GET'
+                }).then(function(data) {
+                    console.log(data[table].columns);
+                    console.log(data[table].records);
+
+                    chats = thisObject.toJSON(data[table].columns, data[table].records);
+                    //TODO: Speichern in der lokalen DB
+                    $("#synchronizeDB").attr('issynched', true).trigger('change');
+                });
+
+            },
+            /**
+             * Convert data from ajax-post to json-object
+             * @param columns
+             * @param records
+             * @returns {Array}
+             */
+            toJSON: function (columns, records) {
+                var jsonObjects = [];
+                records.forEach(function (record) {
+                    var jsonObject = {};
+                    var i = 0;
+                    columns.forEach(function (column) {
+                        jsonObject[column] = record[i];
+                        i++;
+                    });
+
+                    jsonObjects.push(jsonObject);
+                });
+
+
+                return jsonObjects;
+            },
+
+            getReadedChats: function(){
+                var readedChats = [];
+                //TODO: Auslesen von der lokalen DB
+                chats.forEach(function(item){
+                    if((!item.isButton && item.readed) || (item.isButton && item.clicked && item.readed)){
+                        readedChatsList.push(item);
+                    }
+                });
+                return readedChats;
+            },
+
+            addChatItem: function($scope, item){
+                console.log(item);
+                $scope.readedChats.push(item);
+            }
+
+        }
+
+
+    })
+
     .factory('Settings', function(Chats){
         return {
             getSettingsList: function(){
@@ -102,13 +197,12 @@ angular.module('starter.services', ['ionic', 'ngCordova'])
                 return chapters;
             },
 
-            addChapterListItem: function($scope, item){
-                console.log(item);
+            addChapterListItem: function($scope, $ionicHistory, item){
                 $scope.chapterList.push(item);
+                $ionicHistory.clearCache();
             },
             viewEntered: function($scope){
                 $scope.$on('$ionicView.enter', function(e) {
-                    alert(5);
                     //TODO: Aktualisiere das Geschichtsverlauf nach Wechseln der Tab
                     //TODO: Kapitels auslesen anhand des lokalen DBs
                     //$scope.addChapterListItem({ text: "Kapitel "+currentStart, value: "ficken"+currentStart });
@@ -131,46 +225,7 @@ angular.module('starter.services', ['ionic', 'ngCordova'])
         var chats = [];
 
         return {
-            /**
-             * Synchronize globalDB with localDB
-             */
-            synchronizeLocalDB: function(){
-                //TODO: Synchronize globalDB with localDB
 
-                var root = 'http://plaindroiddb.repair-your-iphone.de/api.php';
-                var table = 'contents';
-                var thisObject = this;
-                $.ajax({
-                    url: root + '/'+table,
-                    method: 'GET'
-                }).then(function(data) {
-                    chats = thisObject.toJSON(data[table].columns, data[table].records);
-                    $("#synchronizeDB").attr('issynched', true).trigger('change');;
-                });
-
-            },
-            /**
-             * Convert data from ajax-post to json-object
-              * @param columns
-             * @param records
-             * @returns {Array}
-             */
-            toJSON: function (columns, records) {
-                var jsonObjects = [];
-                records.forEach(function (record) {
-                    var jsonObject = [];
-                    var i = 0;
-                    columns.forEach(function (column) {
-                        jsonObject[column] = record[i];
-                        i++;
-                    });
-
-                    jsonObjects.push(jsonObject);
-                });
-
-
-                return jsonObjects;
-            },
             all: function () {
                 return chats;
             },

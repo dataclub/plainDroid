@@ -1,4 +1,4 @@
-<ion-view view-title="Settings">
+<ion-view view-title="Settings" cache-view="false">
   <ion-content>
     <ion-list>
         <div class="list">
@@ -35,7 +35,7 @@
 
 
             <div class="item item-divider">
-                Geschichtsverlauf: {{ data.serverSide }}
+                Geschichtsverlauf: {{ data.chapters }}
             </div>
 
             <ion-radio ng-repeat="item in chapterList"
