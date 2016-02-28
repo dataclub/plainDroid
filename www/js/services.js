@@ -2,7 +2,11 @@ angular.module('starter.services', ['ionic', 'ngCordova'])
 
     .factory('$cordovaLocalNotification', function(){
 
-        return {
+        /**
+         * Schedulers
+         */
+
+        var cordovaLocalNotification = {
             scheduleNotification: function (item) {
                 document.addEventListener('deviceready', function () {
                     $cordovaLocalNotification = cordova.plugins.notification.local;
@@ -77,6 +81,14 @@ angular.module('starter.services', ['ionic', 'ngCordova'])
                 });
             }
         };
+
+        cordovaLocalNotification.scheduledNotification();
+        cordovaLocalNotification.clickedNotification();
+        cordovaLocalNotification.updatedNotification();
+        cordovaLocalNotification.triggeredNotification();
+
+        return cordovaLocalNotification;
+
     })
 
     .factory('Game', function(Chats){

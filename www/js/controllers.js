@@ -1,13 +1,7 @@
 angular.module('starter.controllers', ['ionic', 'ngCordova', 'ui.bootstrap'])
 
 .controller('GameCtrl', function($scope, Chats, Game, $ionicModal, $ionicPopup, $ionicScrollDelegate, $cordovaLocalNotification, $ionicHistory) {
-        /**
-         * Schedulers
-         */
-        $cordovaLocalNotification.scheduledNotification();
-        $cordovaLocalNotification.clickedNotification();
-        $cordovaLocalNotification.updatedNotification();
-        $cordovaLocalNotification.triggeredNotification();
+
 
 
 
