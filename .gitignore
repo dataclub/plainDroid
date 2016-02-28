@@ -3,8 +3,6 @@
 
 node_modules/
 platforms/
-!platforms/android/build/outputs/*
-!platforms/ios/build/outputs/*
 
 plugins/
 www/js/data.js
