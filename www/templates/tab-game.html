@@ -1,9 +1,6 @@
 <ion-view view-title="Game">
     <ion-content>
-
-        <ion-list id="list_new">
-
-
+        <ion-list>
             <ion-item ng-repeat="(key, item) in readedChatsList"
                       ng-value="item.value"
                       ng-model="data.chats"
@@ -12,7 +9,7 @@
                       type="item-text-wrap"
                       id="ion-item_{{item.id}}">
 
-                <img src="{{ item.face }}" ng-if="item.face != null && item.isButton != '1' && item.readed == '1'">
+                <img ng-src="{{ item.face }}" ng-show="item.face != null && item.isButton != '1' && item.readed == '1'">
 
                 <p ng-show="item.isButton != '1' && item.readed == '1'" id="{{ item.id }}"
                    class="{{ item.className }}">{{ item.text }}</p>
@@ -20,21 +17,25 @@
 
                 <div class="button-bar" ng-show="item.isButton == '1' && item.readed == '1'">
                     <div ng-repeat="(buttonKey, buttonValue) in item.buttons"
-                         class="button button-outline button-block"
-                         ng-if="buttonKey < 3">
-                        <a ng-class="{'button-positive active': isActive('{{button.id}}', 'left')}"
-                           ng-click="clickedButton('{{buttonKey}}', 'left')">{{buttonValue}}</a>
+                         ng-click="showConfirmStory('{{key}}', '{{buttonKey}}', '{{item.parent}}', {title: 'Warnung', message: 'Hiermit wird die Story verändert!'})"
+                         ng-if="buttonKey < 3"
+                         ng-class="{'button-positive active': isActive('{{key}}', '{{buttonKey}}', '{{item.clicked}}')}"
+                         class="button button-outline button-block">
+                        {{buttonValue}}
                     </div>
 
                     <!-- Split-Button -->
                     <div uib-dropdown is-open="status.isopen" ng-if="splitButton(key, item.id)">
                         <a class="button button-outline button-block icon ion-navicon" id="single-button_{{key}}"
-                           type="button" class="btn btn-primary" uib-dropdown-toggle ng-disabled="disabled"
-                           ng-click="chatChange('{{item.id}}')"></a>
+                           type="button" class="btn btn-primary" uib-dropdown-toggle ng-disabled="disabled"></a>
                         <ul uib-dropdown-menu role="menu" aria-labelledby="single-button_{{key}}">
-                            <li role="menuitem" ng-repeat="(buttonKey, buttonValue) in item.buttons" ng-if="buttonKey > 2">
-                                    <a href="#" ng-click="chatChange('button')">{{buttonValue}}</a>
-                                    <div ng-class="splitButtonLengthIsMoreThanKey('{{buttonKey}}') ? 'divider' : ''"></div>
+                            <li role="menuitem"
+                                ng-repeat="(buttonKey, buttonValue) in item.buttons"
+                                ng-if="buttonKey > 2"
+                                ng-click="showConfirmStory('{{key}}', '{{buttonKey}}', '{{item.parent}}', {title: 'Warnung', message: 'Hiermit wird die Story verändert!'})"
+                                ng-class="{'button-positive active': isActive('{{key}}', '{{buttonKey}}', '{{item.clicked}}')}">
+                                    <a>{{buttonValue}}</a>
+                                    <div ng-class="splitButtonLengthIsMoreThanKey('{{key}}', '{{buttonKey}}') ? 'divider' : ''"></div>
                             </li>
                         </ul>
                     </div>

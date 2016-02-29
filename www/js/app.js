@@ -23,7 +23,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         });
     })
 
-    .config(function ($stateProvider, $urlRouterProvider) {
+    .config(function ($stateProvider, $urlRouterProvider, localStorageServiceProvider) {
+        localStorageServiceProvider
+            .setPrefix('plainDroid')
+            .setStorageType('localStorage')
+            .setStorageCookie(0, '/')
+            .setNotify(true, true);
 
         // Ionic uses AngularUI Router which uses the concept of states
         // Learn more here: https://github.com/angular-ui/ui-router

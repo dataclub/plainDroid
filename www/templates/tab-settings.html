@@ -1,4 +1,4 @@
-<ion-view view-title="Settings" cache-view="false">
+<ion-view view-title="Settings">
   <ion-content>
     <ion-list>
         <div class="list">
@@ -9,13 +9,15 @@
 
             <ion-toggle ng-repeat="item in settingsList"
                         ng-model="item.checked"
-                        ng-checked="item.checked">
+                        ng-checked="item.checked"
+                        ng-change="settingsNotificationChange(item)"
+                    >
                 {{ item.text }}
             </ion-toggle>
 
-            <div class="item">
+            <!--div class="item">
                 <pre ng-bind="settingsList | json"></pre>
-            </div>
+            </div-->
 
             <div class="item item-divider">
                 Notifications
@@ -23,12 +25,12 @@
 
             <ion-toggle ng-model="pushNotification.checked"
                         ng-change="pushNotificationChange()">
-                Push Notifications
+                Local Notifications
             </ion-toggle>
 
-            <div class="item">
+            <!--div class="item">
                 <pre ng-bind="pushNotification | json"></pre>
-            </div>
+            </div-->
 
 
 
