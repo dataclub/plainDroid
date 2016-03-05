@@ -50,6 +50,10 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                 },
                 bind: function($scope, key){
                     return localStorageService.bind($scope, key);
+                },
+                now: function(){
+                    var now = new Date();
+                    return (now.getFullYear().toString()) + "-" +("0" + (now.getMonth() + 1).toString()).substr(-2) + "-" + ("0" + now.getDate().toString()).substr(-2);
                 }
             };
             return storage;
@@ -77,7 +81,7 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
         return null;
     })
 
-    .factory('Game', function(DB){
+    .factory('Game', function(DB, Chats){
 
         var game = {
             /**
@@ -118,38 +122,142 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                     $ionicHistory.clearCache();
                 });
             },
-            bindChatsToScope: function($scope){
+            bindExistingChatsToScope: function(){
                 var chats = DB.get('chats');
                 DB.set('chats', chats);
-                DB.bind($scope, 'chats');
+                DB.bind(Chats.getScope('gameScope'), 'chats');
+            },
+            setNewDataToChats: function(data, updatedDate){
+                if(typeof(updatedDate) == 'undefined'){
+                    updatedDate = DB.now();
+                }
+                DB.set('chats', data);
+                DB.bind(Chats.getScope('gameScope'), 'chats');
+                DB.set('updatedDate', updatedDate);
             },
             /**
              * Synchronize globalDB with localDB
              */
-            synchronizeLocalDB: function($scope, apiURI){
+            synchronizeLocalDB: function(syncToLocalStorage){
+                if(typeof(syncToLocalStorage) == 'undefined'){
+                    syncToLocalStorage = false;
+                }
+                var dbChats = DB.get('chats');
+                var downloadedChats = DB.get('downloadedChats');
 
+                if (syncToLocalStorage) {
+                    /**
+                     * Sync completely to localStorage
+                     * Fixed: Hier liegt ein Download-Vorgang vor!
+                     */
+                    Chats.getScope('gameScope').showConfirmSynchronisation({
+                        title: 'Achtung - Synchronisation der Story',
+                        message: 'Möchte Sie die aktuellste Story runterladen?'
+                    });
+                } else if (downloadedChats.length != dbChats.length && downloadedChats.length > dbChats.length) {
+                    /**
+                     * New Story added
+                     */
+                    game.checkUpdateLocalDBStory();
+                }
+                else if (dbChats.length == downloadedChats.length) {
+                    /**
+                     * Story was modificated
+                     * Fixed: Hier liegt eine Modifizierung der vorhandenen Story vor!
+                     */
+
+                    Chats.getScope('gameScope').showConfirmModificate({
+                        title: 'Achtung - Aktualisierung der Story',
+                        message: 'Möchten Sie die Anpassungen der aktuellen Story beziehen?'
+                    });
+                }
+
+
+            },
+            /**
+             * Get all data from globalDB
+             */
+            synchronizeGlobalDB: function (firstTime) {
+                if(typeof(firstTime) == 'undefined'){
+                    firstTime = false;
+                }
                 //All data
-                var table = 'contents?transform=1';
+                var table = 'chats,updates?transform=1';
                 $.ajax({
-                    url: apiURI + '/'+table,
+                    url: DB.get('apiURI') + '/' + table,
                     method: 'GET'
-                }).then(function(data) {
-
+                }).then(function (data) {
                     //DB.clearAll();
                     //return;
 
-                    if(DB.get('chats') == null)  {
-                        //Sync completely
-                        //Fixed: Hier liegt ein Download-Vorgang vor!
-                        $scope.showConfirmSynchronisation($scope, data, {title: 'Achtung', message: 'Es liegt ein Storyupdate vor. Möchten Sie die Story aktualisieren?'});
+
+                    DB.set('downloadedUpdates', data.updates);
+                    if(DB.get('chats') == null){
+                        DB.set('downloadedChats', data.chats);
+
+                        //Synchronize chats to localStorage
+                        game.synchronizeLocalDB(true);
                     }else{
-                        console.log('lolas2')
-                        //set existing localDB there
-                        game.bindChatsToScope($scope);
-                        $("#synchronizeDB").attr('issynched', true).trigger('change');
+                        /**
+                         * set existing localDB there
+                         */
+                        if(firstTime){
+                            game.bindExistingChatsToScope();
+                            $("#synchronizeDB").attr('issynched', true).trigger('change');
+                        }
                     }
                 });
+            },
 
+            checkUpdateLocalDBStory: function(){
+                console.log('checkUpdateLocalDBStory');
+                /**
+                 * Fixed: Ask to update-flag in the database
+                 */
+
+                var now = new Date();
+                var updatedDate=DB.get('updatedDate') == null ? now : DB.get('updatedDate');
+
+                var table = 'updates?transform=1';
+                table += '&filter=date,gt,'+updatedDate;
+                $.ajax({
+                    url: DB.get('apiURI') + '/'+table,
+                    method: 'GET'
+                }).then(function(data) {
+                    console.log(data.updates.length);
+                    console.log(DB.get('updatedDate'));
+                    //No update added in db updates
+                    if(data.updates.length == 0 && DB.get('updatedDate') != null ){
+                        console.log('No updates here from '+ DB.get('updatedDate'));
+                        return;
+                    }
+                        /**
+                         * Fixed: Hier liegt ein Geschichts-Ausbau vor!
+                         */
+                    Chats.getScope('gameScope').showConfirmUpdate(data.updates, {
+                            title: 'Achtung - Es geht mit der Geschichte von plainDroid weiter!',
+                            message: 'Für Offline-Modus muss die Story aktualisiert werden. Soll ein Storyupdate durchgeführt werden?'
+                        });
+                });
+            },
+            checkModificatedGlobalDBStory: function(){
+
+            },
+            updateStorage: function(){
+                var updatedData = [];
+                DB.get('downloadedChats').forEach(function(){
+                    //TODO: Merge data with localStorage witout taking params (clicked and readed)
+                });
+                console.log('merge data');
+                return updatedData;
+            },
+            modificateStorage: function(){
+                var modificatedData = [];
+                DB.get('downloadedChats').forEach(function(){
+                    //TODO: Merge data with localStorage with only taking params (text, buttons)
+                });
+                console.log('modificate data');
+                return modificatedData;
             },
 
             /**
@@ -182,6 +290,11 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
             getReadedChatsList: function(){
                 var chats = DB.get('chats');
                 //TODO: Auslesen von der lokalen DB
+                console.log(chats);
+                if(chats == null){
+                    return;
+                }
+
                 chats.forEach(function(item, index){
                     if(item.isButton == '1'){
                         chats[index].buttons = JSON.parse(item.buttons);
@@ -190,7 +303,7 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                 return chats;
             },
             getChatsFromClickedButton: function($scope){
-                $scope.getChatsFromClickedButton = function(key, buttonKey, parentID, apiURI){
+                $scope.getChatsFromClickedButton = function(key, buttonKey, parentID){
                     //All data
                     var table = 'contents?transform=1';
                     //Get only data from parent
@@ -198,7 +311,7 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                     table += '&filter=clicked,eq,'+buttonKey;
 
                     $.ajax({
-                        url: apiURI + '/'+table,
+                        url: DB.get('apiURI') + '/'+table,
                         method: 'GET'
                     }).then(function(data) {
                         $scope.setTypedInterval(data.contents);
@@ -224,6 +337,25 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
             viewEntered: function($scope, $ionicHistory){
                 $scope.$on('$ionicView.enter', function(e) {
                     console.log('enteredgame');
+                    var offline = DB.get('Offline');
+                    if(offline) {
+                        /**
+                         * Offline-Modus required
+                         */
+                        if(Chats.getScope('gameScope') == null){
+                            console.log('gameScope is null. ');
+
+                        }else{
+                            game.synchronizeLocalDB(Chats.getScope('gameScope'), DB.get('apiURI'));
+                        }
+                        console.log(Chats.getScopes());
+                    }else{
+                        /**
+                         * Online-Modus required
+                         */
+                        game.synchronizeGlobalDB(true);
+
+                    }
 
                     //Clears out the app’s entire history, except for the current view.
                     $ionicHistory.clearHistory();
@@ -375,28 +507,90 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                  * @param buttonKey
                  * @param content Object {title: '', message: ''}
                  */
-                $scope.showConfirmSynchronisation = function ($scope, data, content) {
+                $scope.showConfirmSynchronisation = function (content) {
                     console.log('confir');
                     var confirmObject = {
                         title: content.title,
-                        template: content.message,
-                        data: data.contents,
-                        $scope: $scope
+                        template: content.message
                     };
                     var confirmPopup = $ionicPopup.confirm(confirmObject);
                     confirmPopup.then(function (res) {
                         if (res) {
-                            DB.set('chats', confirmObject.data);
-                            DB.bind(confirmObject.$scope, 'chats');
+                            game.setNewDataToChats(DB.get('downloadedChats'));
 
                             console.log('You clicked on "OK" button');
                         } else {
-                            game.bindChatsToScope(confirmObject.$scope);
+                            game.bindExistingChatsToScope();
                             console.log('You clicked on "Cancel" button');
                         }
                         $("#synchronizeDB").attr('issynched', true).trigger('change');
                     });
                 };
+
+                /**
+                 * Confirmation popup-window comes out, if user wants to update localStorage
+                 * @param key
+                 * @param buttonKey
+                 * @param content Object {title: '', message: ''}
+                 */
+                $scope.showConfirmUpdate = function (updatedDate, content) {
+                    var confirmObject = {
+                        title: content.title,
+                        template: content.message,
+                        updatedDate: updatedDate
+                    };
+                    var confirmPopup = $ionicPopup.confirm(confirmObject);
+                    confirmPopup.then(function (res) {
+                        if (res) {
+                            //TODO: Update localStorage
+                            var chats = game.updateStorage();
+                            DB.bind(Chats.getScope('gameScope'), 'chats');
+
+                            //Update localStorage version
+                            DB.set('updatedDate', confirmObject.updatedDate);
+
+                            console.log('You clicked on "OK" button');
+                        } else {
+                            game.bindExistingChatsToScope();
+                            console.log('You clicked on "Cancel" button');
+                        }
+                        $("#synchronizeDB").attr('issynched', true).trigger('change');
+                    });
+                };
+
+                /**
+                 * Confirmation popup-window comes out, if user wants to update localStorage to modify existing content
+                 * @param key
+                 * @param buttonKey
+                 * @param content Object {title: '', message: ''}
+                 */
+                $scope.showConfirmModificate = function (content) {
+                    var confirmObject = {
+                        title: content.title,
+                        template: content.message
+                    };
+                    var confirmPopup = $ionicPopup.confirm(confirmObject);
+                    confirmPopup.then(function (res) {
+                        if (res) {
+
+                            console.log('checkmodification');
+                            var updatedDate=DB.get('updatedDate') == null ? DB.now() : DB.get('updatedDate');
+
+                            /**
+                             * Fixed: Hier liegt ein Geschichts-Modifizierung vor!
+                             */
+                            var chats = game.modificateStorage();
+                            game.setNewDataToChats(chats, updatedDate);
+
+                            console.log('You clicked on "OK" button');
+                        } else {
+                            game.bindExistingChatsToScope();
+                            console.log('You clicked on "Cancel" button');
+                        }
+                        $("#synchronizeDB").attr('issynched', true).trigger('change');
+                    });
+                };
+
             }
 
         };
@@ -404,26 +598,51 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
         return game;
     })
 
-    .factory('Settings', function(Chats, DB){
+    .factory('Settings', function(Chats, DB, Game){
+
         var settings = {
             getSettingsList: function(){
+                //ion-volume-high
                 return [
-                    { text: "Offline", checked: DB.get('Offline') == null ? false : DB.get('Offline') },
-                    { text: "Musik", checked: DB.get('Musik') == null ? true : DB.get('Musik') },
-                    { text: "Sound", checked: DB.get('Sound') == null ? true : DB.get('Sound') }
+                    {
+                        text: "Musik", checked: DB.get('Musik') == null ? true : DB.get('Musik'),
+                        on: "ion-music-note",
+                        off: "ion-ios-musical-note"
+                    },
+                    {
+                        text: "Sound", checked: DB.get('Sound') == null ? true : DB.get('Sound'),
+                        on: "ion-android-volume-up",
+                        off: "ion-android-volume-off"
+                    },
                 ];
             },
 
             pushNotification: function(){
-                return { checked: DB.get('pushNotification') == null ? true : DB.get('pushNotification')};
+                return {
+                    checked: DB.get('pushNotification') == null ? true : DB.get('pushNotification'),
+                    on: "ion-android-notifications",
+                    off: "ion-android-notifications-off"
+                };
             },
 
+            updateNotification: function(){
+                return {
+                    checked: DB.get('updateNotification') == null  ? false : DB.get('updateNotification'),
+                    icon_on: "ion-alert",
+                    icon_off: "ion-ios-loop-strong",
+                    status_on: "ion-archive",
+                    status_off: "ion-checkmark",
+                    info_on: "vorhanden",
+                    info_off: "auf dem aktuellsten Stand"
 
-            settingsNotificationChanged: function($scope){
+                };
+            },
+
+            settingsChanged: function($scope){
                 $scope.settingsNotificationChange = function(item){
                     //Fixed: Save settings to DB
                     DB.set(item.text, item.checked);
-                    console.log('Settings Notification Change', item);
+                    console.log('Settings Change', item);
                 }
             },
 
@@ -432,6 +651,18 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                     //Fixed: Save notification to DB
                     DB.set('pushNotification', $scope.pushNotification.checked);
                     console.log('Push Notification Change', $scope.pushNotification.checked);
+                }
+            },
+
+            updateNotificationClicked: function($scope){
+                $scope.updateNotificationClick = function(){
+                    if($scope.updateNotification.checked){
+                        //TODO: Auto-Event to check if new version there
+                        $scope.updateNotification.checked = !$scope.updateNotification.checked;
+                        Game.synchronizeLocalDB();
+                        DB.set('updateNotification', $scope.updateNotification.checked);
+                    }
+
                 }
             },
 
@@ -453,6 +684,61 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                     //TODO: Aktualisiere das Geschichtsverlauf nach Wechseln der Tab
                     //TODO: Kapitels auslesen anhand des lokalen DBs
                     settings.addChapterListItem($scope, $ionicHistory, { text: "Kapitel 1", value: "nlabla 1" });
+
+
+                    /**
+                     * TODO: Check if there is new version to modify or update
+                     */
+                    var downloadedUpdates = DB.get('downloadedUpdates');
+                    var table = 'updates?transform=1';
+                    $.ajax({
+                        url: DB.get('apiURI') + '/'+table,
+                        method: 'GET'
+                    }).then(function(data) {
+                        DB.set('downloadedUpdates', data.updates);
+                        downloadedUpdates = DB.get('downloadedUpdates');
+
+                        console.log(1);
+                        DB.set('updatedDate', DB.get('updatedDate') == null ? DB.now() : DB.get('updatedDate'));
+                        DB.set('updatedVersion', DB.get('updatedVersion') == null ? 1 : DB.get('updatedVersion'));
+
+
+                        var updatedDateLocal = DB.get('updatedDate');
+                        var updatedVersionLocal = DB.get('updatedVersion');
+
+                        var updatedDate = DB.now();
+                        var updatedVersion = 1;
+                        if(downloadedUpdates.length > 0){
+                            updatedDate = downloadedUpdates[downloadedUpdates.length-1].date;
+                            updatedVersion = downloadedUpdates[downloadedUpdates.length-1].version;
+                        }
+
+                        console.log(updatedDate);
+                        console.log(updatedDateLocal);
+                        console.log(updatedVersion);
+                        console.log(updatedVersionLocal);
+                        if(updatedDate != updatedDateLocal && updatedVersion > updatedVersionLocal){
+                            console.log('update');
+                            if((DB.get('chats').length != DB.get('downloadedChats').length && DB.get('chats').length < DB.get('downloadedChats').length) || DB.get('chats').length == DB.get('downloadedChats').length){
+                                //New update there
+                                console.log('update execute');
+
+                                /*
+                                 $scope.updatedDate = updatedDate;
+                                 DB.set('updatedDate', updatedDate);
+
+                                 $scope.updatedVersion = updatedVersion;
+                                 DB.set('updatedVersion', updatedVersion);
+
+                                 */
+                                $scope.updateNotification.checked = true;
+                                DB.set('updateNotification', $scope.updateNotification.checked);
+                            }
+                        }
+                    });
+
+
+
                     $ionicHistory.clearHistory();
                 });
             },
@@ -471,8 +757,34 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
 
     .factory('Chats', function () {
         var chats = [];
+        var scopes = [];
 
         return {
+            getScopes: function(){
+                return scopes;
+            },
+            getScope: function(scopeName){
+                var $scope = null;
+                scopes.forEach(function(item){
+                    if(item.scopeName == scopeName){
+                        $scope = item.scope;
+                    }
+                });
+                return $scope;
+            },
+            setScope: function(scopeObject) {
+                if(this.getScopes().length == 0){
+                    scopes.push(scopeObject);
+                }else{
+                    scopes.forEach(function(item){
+                        if(item.scopeName == scopeObject.scopeName){
+                            scopes[scopeObject.scopeName] = scopeObject.scope;
+                        }else{
+                            scopes.push(scopeObject);
+                        }
+                    });
+                }
+            },
 
             all: function () {
                 return chats;

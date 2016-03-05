@@ -1,40 +1,74 @@
 <ion-view view-title="Settings">
   <ion-content>
     <ion-list>
-        <div class="list">
 
-            <div class="item item-divider">
-                Settings
+        <div class="item item-divider bold">
+            Settings
+        </div>
+            <div ng-repeat="item in settingsList"
+                class="item item-toggle item-icon-left assertive">
+
+                <div href="#">
+                    <i class="icon" ng-class="item.checked ? item.on : item.off"></i>
+                    {{ item.text }}
+                </div>
+                <label ng-if="item.status != null">{{item.status}}</label>
+                <label class="toggle toggle-assertive">
+                    <input type="checkbox"
+                           ng-model="item.checked"
+                           ng-checked="item.checked"
+                           ng-change="settingsNotificationChange(item)">
+                    <div class="track">
+                        <div class="handle"></div>
+                    </div>
+                </label>
+
             </div>
 
-            <ion-toggle ng-repeat="item in settingsList"
-                        ng-model="item.checked"
-                        ng-checked="item.checked"
-                        ng-change="settingsNotificationChange(item)"
-                    >
-                {{ item.text }}
-            </ion-toggle>
 
-            <!--div class="item">
-                <pre ng-bind="settingsList | json"></pre>
-            </div-->
-
-            <div class="item item-divider">
-                Notifications
-            </div>
-
-            <ion-toggle ng-model="pushNotification.checked"
-                        ng-change="pushNotificationChange()">
+        <div class="item item-divider bold">
+            Notifications
+        </div>
+        <div class="item item-toggle item-icon-left assertive">
+            <div href="#">
+                <i class="icon" ng-class="pushNotification.checked ? pushNotification.on : pushNotification.off"></i>
                 Local Notifications
-            </ion-toggle>
+            </div>
+            <label ng-if="item.status != null">{{item.status}}</label>
+            <label class="toggle toggle-assertive">
+                <input type="checkbox"
+                       ng-model="pushNotification.checked"
+                       ng-checked="pushNotification.checked"
+                       ng-change="pushNotificationChange()">
+                <div class="track">
+                    <div class="handle"></div>
+                </div>
+            </label>
+        </div>
 
-            <!--div class="item">
-                <pre ng-bind="pushNotification | json"></pre>
-            </div-->
 
+        <div class="item item-divider bold">
+            Update
+        </div>
+        <div class="item item-toggle item-icon-left assertive">
+            <div href="#">
+                <i class="icon" ng-class="updateNotification.checked ? updateNotification.icon_on : updateNotification.icon_off"></i>
+                Update
+            </div>
+            <label class="toggle toggle-assertive">
+                <button class="button icon-right assertive"
+                        ng-class="updateNotification.checked ? updateNotification.status_on : updateNotification.status_off"
+                        ng-click="updateNotificationClick()"
+                        ng-model="updateNotification.checked"
+                        ng-checked="updateNotification.checked"
+                        >
+                    <label ng-if="updateNotification.checked">Version: {{updatedVersion}} {{updateNotification.info_on}}</label>
+                    <label ng-if="!updateNotification.checked">{{updateNotification.info_off}}</label>
+                </button>
+            </label>
+        </div>
 
-
-
+        <div class="list">
 
             <div class="item item-divider">
                 Geschichtsverlauf: {{ data.chapters }}

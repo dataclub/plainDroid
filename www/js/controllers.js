@@ -4,16 +4,20 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ui.bootstrap', 'Lo
 
         //$cordovaLocalNotification.scheduleNotification({});
 
-        var apiURI = 'http://plaindroiddb.repair-your-iphone.de/api.php';
+
+        DB.set('apiURI', 'http://plaindroiddb.repair-your-iphone.de/api.php');
+        Chats.setScope({scopeName: 'gameScope', scope: $scope});
+
+        //console.log(Chats.getScope('gameScope'));
 
         //Synchronize lokalDB with globalDB
-        Game.synchronizeLocalDB($scope, apiURI);
+        //Game.synchronizeGlobalDB(true);
 
         Game.beginGame($scope, $ionicHistory, $ionicPopup);
 
 
         $scope.changeStory = function(key, buttonKey, parentID){
-            $scope.getChatsFromClickedButton(key, buttonKey, parentID, apiURI);
+            $scope.getChatsFromClickedButton(key, buttonKey, parentID);
         };
 
         $scope.setTypedInterval = function(data){
@@ -115,11 +119,15 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ui.bootstrap', 'Lo
 
 
 
-.controller('SettingsCtrl', function($scope, Settings, $ionicHistory) {
+.controller('SettingsCtrl', function($scope, Settings, Chats, $ionicHistory) {
+        Chats.setScope({scopeName: 'settingsScope', scope: $scope});
+
         $scope.settingsList = Settings.getSettingsList();
         $scope.pushNotification = Settings.pushNotification();
+        $scope.updateNotification = Settings.updateNotification();
         Settings.pushNotificationChanged($scope); //Event
-        Settings.settingsNotificationChanged($scope); //Event
+        Settings.updateNotificationClicked($scope); //Event
+        Settings.settingsChanged($scope); //Event
         Settings.viewEntered($scope, $ionicHistory); //Event
         Settings.chapterChanged($scope);
         $scope.chapterList = Settings.getChapterList();
