@@ -20,72 +20,23 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ui.bootstrap', 'Lo
             $scope.getChatsFromClickedButton(key, buttonKey, parentID);
         };
 
-        $scope.setTypedInterval = function(data){
+        $scope.setTypedInterval = function(data, i){
             if(data.length == 0){
                 alert('Keine Daten hinterlegt.');
                 return;
             }
 
-            return;
+            var wait = typeof(data[i].wait) == 'undefined' ? 1000 : data[i].wait;
+            i = typeof(i) == 'undefined' ? 0 : i;
+            setTimeout(function(){
+                data[i].readed = true;
 
-            if(isButton){
-                $('#button_'+id)[0].setAttribute('style', '');
+                Game.addChatListItem($scope, $ionicHistory, data[i]);
 
-
-                if(typeof(chats[i]) != 'undefined' && typeof(chats[i].clicked) != 'undefined'){
-                    $scope.setActive(id, chats[i].clicked);
-                    $scope.output(id, chats[i].clicked == 'left');
+                if(!data[i].isButton){
+                    $scope.setTypedInterval(data[i], i+1);
                 }
-                $ionicScrollDelegate.scrollBottom();
-                console.log(chats[i]);
-                $cordovaLocalNotification.scheduleNotification({text: '['+chats[i].name + ' wartet auf deine Entscheidung!]', title: chats[i-1].text});
-                return null;
-            }
-
-
-            var bla = thisBlock.outerHTML;
-            bla = bla.replace('display: none;', '');
-            bla = bla.replace('chat.face', face);
-            bla = bla.replace('chat.text', text);
-            bla = bla.replace('chat.id', id);
-            bla = bla.replace('block_new', 'block_new_'+id);
-
-            if(typeof(className) == 'undefined'){
-                bla = bla.replace('chat.className', '');
-            }else{
-                bla = bla.replace('chat.className', className);
-            }
-
-            var e = document.createElement('div');
-            e.innerHTML = bla;
-            var childNode = e.childNodes[0];
-            if(face == null){
-                childNode.getElementsByTagName('img')[0].parentNode.removeChild(childNode.getElementsByTagName('img')[0]);
-            }
-
-            thisBlock.parentNode.appendChild(childNode);
-            $ionicScrollDelegate.scrollBottom();
-
-            var chat = chats[i+1];
-            if(chats.length >= i+1 && typeof(chat) != 'undefined') {
-                var timeOut = 1000;
-
-                if(typeof(chat.wait) != 'undefined'){
-                    timeOut = chat.wait;
-                }
-
-                if(typeof(chat.readed) != 'undefined' && chat.readed == true){
-                    timeOut = 0;
-                }
-
-                setTimeout(function(){
-                    if(chats.length >= i+1) {
-                        var iID= ids[i+1];
-                        $scope.setTypedInterval(i+1, thisBlock, ids, chats, iID, chat.text, chat.face, chat.className, chat.isButton);
-                        i++;
-                    }else{return;}
-                }, timeOut);
-            }else{return;}
+            }, wait);
 
         }
     })

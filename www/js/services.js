@@ -215,8 +215,7 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                  * Fixed: Ask to update-flag in the database
                  */
 
-                var now = new Date();
-                var updatedDate=DB.get('updatedDate') == null ? now : DB.get('updatedDate');
+                var updatedDate=DB.get('updatedDate') == null ? DB.now() : DB.get('updatedDate');
 
                 var table = 'updates?transform=1';
                 table += '&filter=date,gt,'+updatedDate;
@@ -240,9 +239,7 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                         });
                 });
             },
-            checkModificatedGlobalDBStory: function(){
 
-            },
             updateStorage: function(){
                 var updatedData = [];
                 DB.get('downloadedChats').forEach(function(){
@@ -324,7 +321,8 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
              * @param $ionicHistory
              * @param item
              */
-            addChatListItem: function($scope, $ionicHistory, item){
+            addChatListItem: function($ionicHistory, item){
+                var $scope = DB.getScope('gameScope');
                 $scope.readedChatsList.push(item);
                 //Clears out the app’s entire history, except for the current view.
                 $ionicHistory.clearHistory();
@@ -671,10 +669,13 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                 return chapters;
             },
 
-            addChapterListItem: function($scope, $ionicHistory, item){
-                $scope.chapterList.push(item);
-                //Clears out the app’s entire history, except for the current view.
-                $ionicHistory.clearHistory();
+            addChapterListItem: function($ionicHistory, item){
+                var $scope = DB.getScope('settingsScope');
+                if(!settings.checkChapterExists(item)){
+                    $scope.chapterList.push(item);
+                    //Clears out the app’s entire history, except for the current view.
+                    $ionicHistory.clearHistory();
+                }
             },
             viewEntered: function($scope, $ionicHistory){
                 $scope.$on('$ionicView.enter', function(e) {
@@ -683,7 +684,7 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
 
                     //TODO: Aktualisiere das Geschichtsverlauf nach Wechseln der Tab
                     //TODO: Kapitels auslesen anhand des lokalen DBs
-                    settings.addChapterListItem($scope, $ionicHistory, { text: "Kapitel 1", value: "nlabla 1" });
+                    settings.addChapterListItem($ionicHistory, { text: "Kapitel 1", value: "nlabla 1" });
 
 
                     /**
@@ -747,7 +748,30 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                 $scope.chapterChange = function(item) {
                     console.log("Selected Chapter, text:", item.text, "value:", item.value);
                 };
-            }
+            },
+            getLastChapter: function(){
+                var $scope = DB.getScope('gameScope');
+                var lastChapter = null;
+                $scope.readedChatsList.forEach(function(item){
+                    if(typeof(item.chapter) != 'undefined'){
+                        lastChapter = item.chapter;
+                    }
+                });
+
+                return lastChapter;
+            },
+            checkChapterExists: function($chapter){
+                var $scope = DB.getScope('settingsScope');
+                var returnValue = false;
+                $scope.chapterList.forEach(function(item){
+                    if($chapter.text == item.text && $chapter.value == item.value){
+                        returnValue = true;
+                        return;
+                    }
+                });
+                return returnValue;
+            },
+
 
         };
 
