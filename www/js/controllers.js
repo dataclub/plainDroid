@@ -4,20 +4,26 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ui.bootstrap', 'Lo
 
         //$cordovaLocalNotification.scheduleNotification({});
 
-
+        //DB.clearAll();
+        //return;
         DB.set('apiURI', 'http://plaindroiddb.repair-your-iphone.de/api.php');
         Chats.setScope({scopeName: 'gameScope', scope: $scope});
+        console.log('lol');
+        console.log($ionicHistory);
+        Chats.setIonicHistory($ionicHistory);
+        Chats.setIonicPopup($ionicPopup);
 
         //console.log(Chats.getScope('gameScope'));
 
         //Synchronize lokalDB with globalDB
         //Game.synchronizeGlobalDB(true);
 
-        Game.beginGame($scope, $ionicHistory, $ionicPopup);
+        Game.beginGame();
 
 
-        $scope.changeStory = function(key, buttonKey, parentID){
-            $scope.getChatsFromClickedButton(key, buttonKey, parentID);
+        $scope.changeStory = function(key, buttonKey, id){
+            Game.setChatsToDefaultFromClickedButton(key, id);
+            $scope.getChatsFromClickedButton(key, buttonKey, id);
         };
 
         $scope.setTypedInterval = function(data, i){
@@ -25,18 +31,28 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ui.bootstrap', 'Lo
                 alert('Keine Daten hinterlegt.');
                 return;
             }
-
-            var wait = typeof(data[i].wait) == 'undefined' ? 1000 : data[i].wait;
             i = typeof(i) == 'undefined' ? 0 : i;
-            setTimeout(function(){
-                data[i].readed = true;
+            /*
+            var item = data[0];
+            item.readed = '1';
+            Game.addChatListItem(item);
 
-                Game.addChatListItem($scope, $ionicHistory, data[i]);
+*/
 
-                if(!data[i].isButton){
-                    $scope.setTypedInterval(data[i], i+1);
+
+            var item = data[i];
+            if(item != null){
+            var wait = item.wait == null ? 1000 : item.wait;
+            setTimeout(function () {
+                console.log(333);
+
+                Game.addChatListItem(item, i);
+
+                if (item.isButton == null) {
+                    $scope.setTypedInterval(data, i+1);
                 }
             }, wait);
+            }
 
         }
     })
