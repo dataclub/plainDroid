@@ -3559,6 +3559,7 @@ ion-infinite-scroll {
   left: 0;
   width: 100%;
   height: 100%;
+  background-color: #fff;
   overflow: hidden; }
 
 .view-container {
@@ -5644,7 +5645,7 @@ ion-tabs.tabs-color-active-dark .tab-item {
  */
 .item {
   border-color: #ddd;
-
+  background-color: #fff;
   color: #444;
   position: relative;
   z-index: 2;
