@@ -78,6 +78,8 @@
 
 body {
     font: 16px/20px 'Cutive Mono', serif;
+    background-color: red;
+    background-image: url("../img/layout alien 1.png");
 }
 
 a {
@@ -95,4 +97,31 @@ a {
     text-align: left;
 }
 
+@media (min-width: 360px) {
+    .view-container{
+
+
+    }
+
+    .pane,
+    .view {
+
+padding-top: 50px;
+        padding-left: 65px;
+    }
+    .tabs-striped .tabs {
+
+        background-color: transparent;
+        border-style: none;
+        margin-left: -65px;
+    }
+
+    .tab-item {
+        flex: none;
+        width:70px;
+        padding-top:12px;
+        height: 60px;
+
+    }
+}
 
