@@ -345,40 +345,55 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
             },
             setChatsToDefaultFromClickedButton: function(key, id){
                 var chats = Chats.getChats();
-                var fromIndex = -1;
-                chats.forEach(function(item, index){
 
-                    if(item.id == id){
-                        fromIndex = index;
-                    }else if(fromIndex != -1){
-                        item.readed = null;
 
-                        if(item.isButton != null){
-                            item.clicked = null;
+                for(var i=0;i<chats.length;i++){
+                    if(chats[i].parent == id){
+
+
+
+                        for(var o=0;o<chats.length;o++){
+                            if(chats[i].id == chats[o].parent){
+                                chats.splice(o,1);
+                                o = -1;
+                            }
                         }
-                        chats[index] = item;
-                    }
 
-                });
+
+                        chats.splice(i,1);
+                        i = -1;
+                    }
+                }
+
+
                 DB.set('chats', chats);
 
                 var readedChatsList = game.$scope().readedChatsList;
-                var fromIndexReaded = false;
-                readedChatsList.forEach(function(item, index){
-                    if(index == key){
-                        fromIndexReaded = true;
-                    }else if(fromIndexReaded){
-                        item.readed = null;
 
-                        if(item.isButton != null){
-                            item.clicked = null;
+                for(var i=0;i<readedChatsList.length;i++){
+                    if(readedChatsList[i].parent == id){
+                        this.setInactiveUnder(id);
+
+
+                        for(var o=0;o<readedChatsList.length;o++){
+                            if(readedChatsList[i].id == readedChatsList[o].parent){
+                                readedChatsList.splice(o,1);
+                                o = -1;
+                            }
                         }
-                        readedChatsList[index] = item;
+
+
+                        readedChatsList.splice(i,1);
+                        i = -1;
                     }
-                });
+                }
+
+                console.log(readedChatsList);
+                console.log(chats);
+
                 game.$scope().readedChatsList = readedChatsList;
                 game.$ionicHistory().clearCache();
-                console.log(chats);
+
             },
             /**
              * Adds item to game view-scope
@@ -512,13 +527,25 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                  */
                 game.$scope().setActive = function (key, buttonKey) {
                     var indexOfActiveButton = game.$scope().existsActiveID(key);
+                    var activeButtons = game.$scope().active;
+                    var readedChatsList = game.$scope().readedChatsList;
+
                     if (indexOfActiveButton == -1) {
-                        game.$scope().active.push({key: key, buttonKey: buttonKey});
-                        game.$scope().readedChatsList[key].clicked = buttonKey;
+                        activeButtons.push({key: key, buttonKey: buttonKey});
+                        readedChatsList[key].clicked = buttonKey;
                     } else {
-                        game.$scope().active[indexOfActiveButton] = {key: key, buttonKey: buttonKey};
+                        activeButtons[indexOfActiveButton] = {key: key, buttonKey: buttonKey};
                     }
                 };
+            },
+            setInactiveUnder: function(key){
+                console.log(key);
+
+                var indexOfActiveButton = game.$scope().existsActiveID(key);
+                console.log(indexOfActiveButton);
+                if (indexOfActiveButton != -1) {
+                    game.$scope().active.splice(indexOfActiveButton, 1);
+                }
             },
 
             existsActiveID: function () {
@@ -550,7 +577,10 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                  */
                 game.$scope().isActive = function (key, buttonKey, clickedButton) {
                     var isActive = false;
-                    game.$scope().active.forEach(function (value) {
+                    var activeButtons =  game.$scope().active;
+                    var readedChatList = game.$scope().readedChatsList;
+
+                    activeButtons.forEach(function (value) {
                         if (key == value.key && buttonKey == value.buttonKey) {
                             isActive = true;
                             return;
@@ -558,7 +588,7 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                     });
 
 
-                    if(game.$scope().active.length == 0 && !isActive && buttonKey == game.$scope().readedChatsList[key].clicked){
+                    if(activeButtons.length == 0 && !isActive && buttonKey == readedChatList[key].clicked){
                        isActive = true;
                     }
 
