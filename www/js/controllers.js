@@ -8,8 +8,6 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ui.bootstrap', 'Lo
         //return;
         DB.set('apiURI', 'http://217.160.15.56/plainDroidDB/api.php');
         Chats.setScope({scopeName: 'gameScope', scope: $scope});
-        console.log('lol');
-        console.log($ionicHistory);
         Chats.setIonicHistory($ionicHistory);
         Chats.setIonicPopup($ionicPopup);
 

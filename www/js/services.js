@@ -132,20 +132,15 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                         game.$scope().readedChatsList = [];
                     }else{
                         game.$scope().readedChatsList = game.getReadedChatsList();
-                        console.log('je');
-                        console.log(game.$scope().readedChatsList);
-                        console.log(DB.get('chats'));
-                        //game.$scope().readedChatsList.pop(game.$scope().readedChatsList[game.$scope().readedChatsList.length-1]);
-                        //DB.set('chats', game.$scope().readedChatsList);
+                        if(DB.get('readedChatsList') != null && DB.get('readedChatsList').length != 0){
+                            game.$scope().readedChatsList = DB.get('readedChatsList');
+                        }
                         game.$ionicHistory().clearCache();
                     }
 
                     if(game.$scope().readedChatsList.length == 0){
                         game.$scope().setTypedInterval(Chats.getChats());
                     }
-
-
-
                 });
             },
             bindExistingChatsToScope: function(){
@@ -402,6 +397,7 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
 
 
                 DB.set('chats', chats);
+                DB.set('readedChatsList', readedChatsList);
 
                 //Clears out the app’s entire history, except for the current view.
                 game.$ionicHistory().clearHistory();
@@ -506,16 +502,9 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                     } else {
                         activeButtons[indexOfActiveButton] = {key: key, buttonKey: buttonKey};
                     }
-                };
-            },
-            setInactiveUnder: function(key){
-                console.log(key);
 
-                var indexOfActiveButton = game.$scope().existsActiveID(key);
-                console.log(indexOfActiveButton);
-                if (indexOfActiveButton != -1) {
-                    game.$scope().active.splice(indexOfActiveButton, 1);
-                }
+                    DB.set('readedChatsList', readedChatsList);
+                };
             },
 
             existsActiveID: function () {
