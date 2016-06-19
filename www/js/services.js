@@ -332,7 +332,7 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                     var table = 'chats?transform=1';
                     //Get only data from parent
                     table += '&filter[]=parent,eq,'+id;
-                    table += '&filter[]=clicked,eq,'+buttonKey;
+                    table += '&filter[]=button,eq,'+buttonKey;
 
                     $.ajax({
                         url: DB.get('apiURI') + '/'+table,
@@ -344,55 +344,25 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                 };
             },
             setChatsToDefaultFromClickedButton: function(key, id){
-                var chats = Chats.getChats();
+                var deleteAllChatsUnder = function(id){
+                    var readedChatsList = game.$scope().readedChatsList;
 
-
-                for(var i=0;i<chats.length;i++){
-                    if(chats[i].parent == id){
-
-
-
-                        for(var o=0;o<chats.length;o++){
-                            if(chats[i].id == chats[o].parent){
-                                chats.splice(o,1);
-                                o = -1;
+                    for(var i=0;i<readedChatsList.length;i++){
+                        if(readedChatsList[i].parent == id){
+                            if(readedChatsList[i].isButton == '1'){
+                                readedChatsList = deleteAllChatsUnder(readedChatsList[i].id);
                             }
+                            readedChatsList.splice(i,1);
+                            i = -1;
                         }
-
-
-                        chats.splice(i,1);
-                        i = -1;
                     }
-                }
 
+                    return readedChatsList;
+                };
 
-                DB.set('chats', chats);
-
-                var readedChatsList = game.$scope().readedChatsList;
-
-                for(var i=0;i<readedChatsList.length;i++){
-                    if(readedChatsList[i].parent == id){
-                        this.setInactiveUnder(id);
-
-
-                        for(var o=0;o<readedChatsList.length;o++){
-                            if(readedChatsList[i].id == readedChatsList[o].parent){
-                                readedChatsList.splice(o,1);
-                                o = -1;
-                            }
-                        }
-
-
-                        readedChatsList.splice(i,1);
-                        i = -1;
-                    }
-                }
-
-                console.log(readedChatsList);
-                console.log(chats);
-
-                game.$scope().readedChatsList = readedChatsList;
+                game.$scope().readedChatsList = deleteAllChatsUnder(id);
                 game.$ionicHistory().clearCache();
+
 
             },
             /**
