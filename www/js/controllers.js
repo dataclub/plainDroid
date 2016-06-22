@@ -19,40 +19,37 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ui.bootstrap', 'Lo
         Game.beginGame();
 
 
-        $scope.changeStory = function(key, buttonKey, id){
+        $scope.changeStory = function(key, buttonKey,  buttonID, id){
             Game.setChatsToDefaultFromClickedButton(key, id);
-            $scope.getChatsFromClickedButton(key, buttonKey, id);
+            $scope.getChatsFromClickedButton(buttonID);
         };
 
-        $scope.setTypedInterval = function(data, i){
-            if(data.length == 0){
+        $scope.setTypedInterval = function(chat, i){
+            if(chat.length == 0){
                 alert('Keine Daten hinterlegt.');
                 return;
             }
             i = typeof(i) == 'undefined' ? 0 : i;
-            /*
-            var item = data[0];
-            item.readed = '1';
-            Game.addChatListItem(item);
-
-*/
 
 
-            var item = data[i];
+            var item = chat.content[i];
             if(item != null){
-            var wait = item.wait == null ? 1000 : item.wait;
-            setTimeout(function () {
-                console.log(333);
+                var wait = item.wait == null ? 1000 : item.wait;
+                item.index = i;
+                item.chatID = chat.id;
+                item.chatUUID = chat.uuid;
+                item.chatIndex = chat.index;
 
-                Game.addChatListItem(item, i);
+                setTimeout(function () {
+                    Game.addChatListItem(item);
 
-                if (item.isButton == null) {
-                    $scope.setTypedInterval(data, i+1);
-                }
-            }, wait);
+                    if (item.isButton == null) {
+                        $scope.setTypedInterval(chat, i+1);
+                    }
+                }, wait);
             }
-
         }
+
     })
 
 .controller('MapCtrl', function($scope, Chats) {

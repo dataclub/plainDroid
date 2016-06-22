@@ -102,10 +102,10 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                 /**
                  * Startup - Events
                  */
-                game.viewEntered();        //Event - After entered the game-tab
-                game.buttonsRendered();                   //Event - After Render Buttons Event
-                game.splitButton();                       //Splitted Buttons, if there are more that 2 Conditions
-                game.splitButtonLengthIsMoreThanKey();    //Contdition to check for divider in split-buttons
+                game.viewEntered();                     //Event - After entered the game-tab
+                game.buttonsRendered();                 //Event - After Render Buttons Event
+                game.splitButton();                     //Splitted Buttons, if there are more that 2 Conditions
+                game.splitButtonLengthIsMoreThanKey();  //Condition to check for divider in split-buttons
 
 
                 /**
@@ -132,14 +132,14 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                         game.$scope().readedChatsList = [];
                     }else{
                         game.$scope().readedChatsList = game.getReadedChatsList();
-                        if(DB.get('readedChatsList') != null && DB.get('readedChatsList').length != 0){
-                            game.$scope().readedChatsList = DB.get('readedChatsList');
-                        }
+
                         game.$ionicHistory().clearCache();
                     }
 
                     if(game.$scope().readedChatsList.length == 0){
-                        game.$scope().setTypedInterval(Chats.getChats());
+                        var chat = Chats.getChats('00');
+                        chat.index = Chats.getChatsIndex('00');
+                        game.$scope().setTypedInterval(chat);
                     }
                 });
             },
@@ -153,10 +153,7 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                 }
 
                 data.forEach(function(item, index){
-                    if(item.isButton != null){
-                        item.buttons = typeof(item.buttons) == 'object' ? item.buttons : JSON.parse(item.buttons);
-                    }
-                    data[index].buttons = item.buttons;
+                    data[index].content = typeof(item.content) == 'object' ? item.content : JSON.parse(item.content);
                 });
                 DB.set('chats', data);
                 DB.set('updatedDate', updatedDate);
@@ -200,6 +197,7 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
 
 
             },
+
             /**
              * Get all data from globalDB
              */
@@ -208,16 +206,14 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                     firstTime = false;
                 }
                 //All data
-                var table = 'chats,updates?transform=1';
+                var table = 'history,updates?transform=1';
                 $.ajax({
                     url: DB.get('apiURI') + '/' + table,
                     method: 'GET'
                 }).then(function (data) {
 
-
-
                     DB.set('downloadedUpdates', data.updates);
-                    DB.set('downloadedChats', data.chats);
+                    DB.set('downloadedChats', data.history);
                     if(DB.get('chats') == null){
                         //Synchronize chats to localStorage
                         game.synchronizeLocalDB(true);
@@ -314,27 +310,28 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
              * @returns {Array}
              */
             getReadedChatsList: function(){
-                var chats = Chats.getChats();
-                //TODO: Auslesen von der lokalen DB
-                if(chats == null){
-                    return [];
+                //Auslesen von der lokalen DB
+                var readedChatsList = [];
+                if(DB.get('readedChatsList') != null && DB.get('readedChatsList').length != 0){
+                    readedChatsList = DB.get('readedChatsList');
                 }
-                return chats.filter(function(item){return item.readed == '1'});
+
+                return readedChatsList.filter(function(item){return item.readed == '1'});
             },
             getChatsFromClickedButton: function(){
-                game.$scope().getChatsFromClickedButton = function(key, buttonKey, id){
+                game.$scope().getChatsFromClickedButton = function(buttonID){
                     //All data
-                    var table = 'chats?transform=1';
+                    var table = 'history?transform=1';
                     //Get only data from parent
-                    table += '&filter[]=parent,eq,'+id;
-                    table += '&filter[]=button,eq,'+buttonKey;
+                    table += '&filter[]=uuid,eq,'+buttonID;
 
                     $.ajax({
                         url: DB.get('apiURI') + '/'+table,
                         method: 'GET'
                     }).then(function(data) {
-                        console.log(data.chats);
-                        game.$scope().setTypedInterval(Chats.convertChatButtonsToJSON(data.chats));
+                        var chat = Chats.convertListToJSON(data.history)[0];
+                        chat.index = Chats.getChatsIndex(chat.uuid);
+                        game.$scope().setTypedInterval(chat);
                     });
                 };
             },
@@ -361,36 +358,37 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
 
             },
             /**
-             * Adds item to game view-scope
-             * @param item
+             *
+             * @returns {number}
              */
-            addChatListItem: function(item, index){
-                item.readed = '1';
-
-                var readedChatsList = game.$scope().readedChatsList;
-                var foundIndex = -1;
-                readedChatsList.forEach(function(readedItem, i){
-                    if(readedItem.id == item.id){
+            itemIndexFoundInList: function(chatsList, item){
+                var foundIndex = null;
+                chatsList.forEach(function(readedItem, i){
+                    if(typeof(readedItem.id) != 'undefined' && typeof(item.id) != 'undefined' && readedItem.id == item.id){
                         foundIndex = i;
                         return;
                     }
                 });
+                return foundIndex;
+            },
+            /**
+             * Adds item to game view-scope
+             * @param item
+             */
+            addChatListItem: function(item){
+                item.readed = '1';
+
+                var readedChatsList = game.$scope().readedChatsList;
+                var foundIndex = this.itemIndexFoundInList(readedChatsList, item);
 
                 var chats = Chats.getChats();
 
-                if(foundIndex == -1){
+                if(foundIndex == null){
                     readedChatsList.push(item);
-                    chats[readedChatsList.length-1] = item;
+                    chats[item.chatIndex].content[item.index] = item;
                 }else{
                     readedChatsList[foundIndex] = item;
-
-                    var foundedChatIdex = -1;
-                    chats.forEach(function(chatItem, i){
-                        if(chatItem.id == item.id){
-                            foundedChatIdex = i;
-                            return;
-                        }
-                    });
+                    var foundedChatIdex = this.itemIndexFoundInList(chats, item);
                     chats[foundedChatIdex] = item;
                 }
 
@@ -559,15 +557,17 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                 /**
                  * Confirmation popup-window comes out, if user clicks to change the story
                  * @param key
+                 * @param buttonID
                  * @param buttonKey
                  * @param content Object {title: '', message: ''}
                  */
-                game.$scope().showConfirmStory = function (key, buttonKey, parentID, id, content) {
+                game.$scope().showConfirmStory = function (buttonID, key, buttonKey, parentID, id, content) {
                     var confirmObject = {
                         title: content.title,
                         template: content.message,
                         key: key,
                         buttonKey: buttonKey,
+                        buttonID: buttonID,
                         parentID: parentID,
                         id: id,
                     };
@@ -575,7 +575,7 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                     confirmPopup.then(function (res) {
                         if (res) {
                             game.$scope().setActive(confirmObject.key, confirmObject.buttonKey);
-                            game.$scope().changeStory(confirmObject.key, confirmObject.buttonKey, confirmObject.id);
+                            game.$scope().changeStory(confirmObject.key, confirmObject.buttonKey, confirmObject.buttonID, confirmObject.id);
                             console.log('You clicked on "OK" button');
                         } else {
                             console.log('You clicked on "Cancel" button');
@@ -877,23 +877,58 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
         var ionicPopup = null;
 
         return {
-            getChats: function(){
+            convertListToJSON: function(chats){
+                chats.forEach(function(chat, index){
+                    chats[index].content = typeof(chat.content) == 'object' ? chat.content : JSON.parse(chat.content);
+                });
+                return chats;
+            },
+            getChats: function(uuid){
                 var chats = DB.get('chats');
                 if(chats == null){
                     return chats;
                 }
 
-                return this.convertChatButtonsToJSON(chats);
+                var returnValue = this.convertListToJSON(chats);
+                if(typeof(uuid) != 'undefined'){
+                    chats.forEach(function(chat){
+                        if(chat.uuid == uuid){
+                            returnValue = chat;
+                            return;
+                        }
+                    })
+                }
+
+                return returnValue;
             },
-            convertChatButtonsToJSON: function(chats){
-                chats.forEach(function(item, index){
-                    if(item.isButton != null){
-                        item.buttons = typeof(item.buttons) == 'object' ? item.buttons : JSON.parse(item.buttons);
+            getChatsIndex: function(uuid){
+                var chats = DB.get('chats');
+                var returnValue = null;
+                chats.forEach(function(chat, index){
+                    if(chat.uuid == uuid){
+                        returnValue = index;
                     }
-                    chats[index].buttons = item.buttons;
+                });
+
+                return returnValue;
+            },
+            /*
+            convertChatButtonsToJSON: function(chats){
+                chats.forEach(function(chat, chatIndex){
+                    var content = Object.keys(chat.content);
+                    content.forEach(function(index){
+                        var item = chat.content[index];
+                        if(item.isButton != null){
+                            item.buttons = typeof(item.buttons) == 'object' ? item.buttons : JSON.parse(item.buttons);
+                        }
+                        chat.content[index] = item;
+                    });
+
+                    chats[chatIndex].content = chat.content;
                 });
                 return chats;
             },
+            */
             getScopes: function(){
                 return scopes;
             },
