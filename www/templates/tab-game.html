@@ -17,7 +17,7 @@
 
                 <div class="button-bar" ng-show="item.isButton == '1' && item.readed == '1'">
                     <div ng-repeat="(buttonKey, buttonValue) in item.buttons"
-                         ng-click="showConfirmStory('{{buttonValue.id}}', '{{key}}', '{{buttonKey}}', '{{item.parent}}', '{{item.id}}', {title: 'Warnung', message: 'Hiermit wird die Story verändert!'})"
+                         ng-click="showConfirmStory('{{buttonValue.id}}', '{{key}}', '{{buttonKey}}', '{{item.chatID}}', {title: 'Warnung', message: 'Hiermit wird die Story verändert!'})"
                          ng-if="buttonKey < 3"
                          ng-class="{'button-positive active': isActive('{{key}}', '{{buttonKey}}', '{{item.clicked}}')}"
                          class="button button-outline button-block">
