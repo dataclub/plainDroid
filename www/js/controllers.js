@@ -20,7 +20,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ui.bootstrap', 'Lo
 
 
         $scope.changeStory = function(key, buttonKey,  buttonID, id){
-            Game.setChatsToDefaultFromClickedButton(key, id);
+            Game.setChatsToDefaultFromClickedButton(key);
             $scope.getChatsFromClickedButton(buttonID);
         };
 

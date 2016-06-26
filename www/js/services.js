@@ -330,8 +330,10 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                         method: 'GET'
                     }).then(function(data) {
                         var chat = Chats.convertListToJSON(data.history)[0];
-                        chat.index = Chats.getChatsIndex(chat.uuid);
-                        game.$scope().setTypedInterval(chat);
+                        if(typeof(chat) != 'undefined'){
+                            chat.index = Chats.getChatsIndex(chat.uuid);
+                            game.$scope().setTypedInterval(chat);
+                        }
                     });
                 };
             },
@@ -339,28 +341,18 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                 var deleteAllChatsUnder = function(key){
                     var readedChatsList = game.$scope().readedChatsList;
                     var tmpReadedChatsList = [];
+
                     for(var i=0;i<parseInt(key)+1;i++){
                         tmpReadedChatsList[i] = readedChatsList[i];
                     }
 
+
                     return tmpReadedChatsList;
                 };
 
-                var setChatsReadedToDefault = function(){
-                  var chats = DB.set('chats');
-
-                    chats.forEach(function(chat, index){
-                    });
-
-                    return chats;
-                };
-
                 game.$scope().readedChatsList = deleteAllChatsUnder(key);
-
-                //DB.set('chats', setChatsReadedToDefault());
+                //Clears out the app’s entire history, except for the current view.
                 game.$ionicHistory().clearCache();
-
-
             },
             /**
              *
@@ -465,7 +457,7 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                  * @param itemID
                  */
                 game.$scope().buttonsRendered = function (itemID) {
-                    $('#ion-item_' + itemID)[0].className = $('#ion-item_' + itemID)[0].className.replace('item', '');
+                    $('#isetInactiveOtherson-item_' + itemID)[0].className = $('#ion-item_' + itemID)[0].className.replace('item', '');
                 };
             },
 
@@ -481,7 +473,16 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                     return typeof(game.$scope().readedChatsList[key].buttons[parseInt(buttonKey) + 1]) == 'undefined' ? false : true;
                 };
             },
-
+            setInactiveOthers: function(ids){
+                var activeButtons = game.$scope().active;
+                var tmpActiveButtons = activeButtons;
+                tmpActiveButtons.forEach(function(index){
+                    if(ids.indexOf(index) == -1){
+                        activeButtons.splice(index, 1);
+                    }
+                });
+                game.$scope().active = activeButtons;
+            },
             setActive: function () {
                 /**
                  * Set button with key from list and buttonKey to active
@@ -876,13 +877,25 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
 
         return {
             convertListToJSON: function(chats){
+                var thisObject = this;
                 chats.forEach(function(chat, index){
                     if(typeof(chat.content) != 'undefined'){
                         chats[index].content = typeof(chat.content) == 'object' ? chat.content : JSON.parse(chat.content);
+                        chats[index].content =  thisObject.convertListToArray(chats[index].content);
+                        chats[index].content.forEach(function(content, cIndex){
+                            if(content.isButton == '1'){
+                                chats[index].content[cIndex].buttons = thisObject.convertListToArray(chats[index].content[cIndex].buttons);
+                            }
+
+                        });
                     }
 
                 });
                 return chats;
+            },
+            convertListToArray: function(list){
+                var list = Object.keys(list).map(function(k){return list[k]});
+                return list;
             },
             getChats: function(uuid){
                 var chats = DB.get('chats');
