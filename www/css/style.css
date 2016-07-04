@@ -3,6 +3,7 @@
 {
     top: 0px;
     position: absolute;
+    height: 62px;
 }
 
 .item, .item h1, .item h2, .item h3, .item h4, .item h5, .item h6, .item p, .item-content, .item-content h1, .item-content h2, .item-content h3, .item-content h4, .item-content h5, .item-content h6, .item-content p
@@ -78,6 +79,9 @@
 
 body {
     font: 16px/20px 'Cutive Mono', serif;
+    background-image: url(../img/background.png);
+
+
 }
 
 a {
@@ -95,4 +99,38 @@ a {
     text-align: left;
 }
 
+@media (min-width: 360px) {
+    .view-container{
+
+        background-image: url("../img/layout.png");
+
+    }
+
+    .pane, .view {
+        background-color: transparent;
+    }
+    .scroll-content{
+        margin: 12px;
+        margin-bottom: 50px;
+    }
+
+    .tabs-striped .tabs {
+        background-color: transparent;
+        border-style: none;
+        margin: 0 auto;
+    }
+
+    .tab-item {
+        flex: none;
+        width:70px;
+        padding-top:12px;
+        height: 60px;
+    }
+
+    .item{
+        background-color: transparent;
+        background: rgba(80,80,100,0.3);
+        margin: 20px;
+    }
+}
 

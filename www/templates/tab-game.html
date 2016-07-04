@@ -17,14 +17,14 @@
 
                 <div class="button-bar" ng-show="item.isButton == '1' && item.readed == '1'">
                     <div ng-repeat="(buttonKey, buttonValue) in item.buttons"
-                         ng-click="showConfirmStory('{{key}}', '{{buttonKey}}', '{{item.parent}}', '{{item.id}}', {title: 'Warnung', message: 'Hiermit wird die Story verändert!'})"
+                         ng-click="showConfirmStory('{{buttonValue.id}}', '{{key}}', '{{buttonKey}}', '{{item.chatUUID}}', {title: 'Warnung', message: 'Hiermit wird die Story verändert!'})"
                          ng-if="buttonKey < 3"
                          ng-class="{'button-positive active': isActive('{{key}}', '{{buttonKey}}', '{{item.clicked}}')}"
                          class="button button-outline button-block">
-                        {{buttonValue}}
+                        {{buttonValue.text}}
                     </div>
 
-                    <!-- Split-Button -->
+                    <!-- Split-Button
                     <div uib-dropdown is-open="status.isopen" ng-if="splitButton(key, item.id)">
                         <a class="button button-outline button-block icon ion-navicon" id="single-button_{{key}}"
                            type="button" class="btn btn-primary" uib-dropdown-toggle ng-disabled="disabled"></a>
@@ -34,7 +34,7 @@
                                 ng-if="buttonKey > 2"
                                 ng-click="showConfirmStory('{{key}}', '{{buttonKey}}', '{{item.parent}}', {title: 'Warnung', message: 'Hiermit wird die Story verändert!'})"
                                 ng-class="{'button-positive active': isActive('{{key}}', '{{buttonKey}}', '{{item.clicked}}')}">
-                                    <a>{{buttonValue}}</a>
+                                    <a>{{buttonValue.text}}</a>
                                     <div ng-class="splitButtonLengthIsMoreThanKey('{{key}}', '{{buttonKey}}') ? 'divider' : ''"></div>
                             </li>
                         </ul>
