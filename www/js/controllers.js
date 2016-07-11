@@ -10,6 +10,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ui.bootstrap', 'Lo
         Chats.setScope({scopeName: 'gameScope', scope: $scope});
         Chats.setIonicHistory($ionicHistory);
         Chats.setIonicPopup($ionicPopup);
+        Chats.setIonicScrollDelegate($ionicScrollDelegate);
 
         //console.log(Chats.getScope('gameScope'));
 

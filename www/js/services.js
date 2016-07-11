@@ -93,6 +93,10 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
             $ionicPopup: function(){
                 return Chats.getIonicPopup();
             },
+            $ionicScrollDelegate: function(){
+                return Chats.getIonicScrollDelegate();
+            },
+
             /**
              * Beginn after synchronized localDB with globalDB
              */
@@ -391,6 +395,7 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                 //Clears out the app’s entire history, except for the current view.
                 game.$ionicHistory().clearHistory();
                 game.$ionicHistory().clearCache();
+                game.$ionicScrollDelegate().scrollBottom();
             },
             /**
              * Registers enter-event for game view
@@ -874,6 +879,7 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
         var scopes = [];
         var ionicHistory = null;
         var ionicPopup = null;
+        var ionicScrollDelegate = null;
 
         return {
             convertListToJSON: function(chats){
@@ -980,6 +986,12 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
             },
             getIonicPopup: function(){
                 return ionicPopup;
+            },
+            setIonicScrollDelegate: function($ionicScrollDelegate){
+                ionicScrollDelegate = $ionicScrollDelegate;
+            },
+            getIonicScrollDelegate: function(){
+                return ionicScrollDelegate;
             },
 
             all: function () {
