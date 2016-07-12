@@ -5,9 +5,10 @@
                       ng-value="item.value"
                       ng-model="data.chats"
                       name="game"
-                      ng-class="(item.nameTitle.face == null || item.nameTitle.align == null) ? '' :
+                      ng-class="(item.nameTitle.face == null || item.nameTitle.align == null) ? 'item-text-center' :
                       (item.nameTitle.align == 'left') ? 'item-avatar-left' :
-                      (item.nameTitle.align == 'right') ? 'item-avatar-right' : ''"
+                      (item.nameTitle.align == 'right') ? 'item-avatar-right item-text-right' :
+                      (item.nameTitle.align == 'center') ? 'item-avatar item-text-center' : ''"
                       type="item-text-wrap"
                       id="ion-item_{{item.id}}">
 
@@ -15,8 +16,8 @@
          ng-show="item.nameTitle.face != null && item.isButton != '1' && item.readed == '1'">
 
 
-                    <p ng-show="item.isButton != '1' && item.readed == '1'" id="{{ item.id }}"
-                       class="{{ item.className }}">{{ item.text }}</p>
+                    <p ng-show="item.isButton != '1' && item.readed == '1'"
+                       id="{{ item.nameTitle.id }}">{{ item.text }}</p>
 
 
                     <div class="button-bar" ng-show="item.isButton == '1' && item.readed == '1'">
