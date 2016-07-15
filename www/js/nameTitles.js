@@ -2,11 +2,12 @@ var nameTitles = {
   "Z": {
     "name": "Zentrale",
     "align": "center",
+    "sound": "/sounds/children.mp3"
   },
   "J": {
     "name": "Jeyson",
     "face": "/img/ionic.png",
-    "align": "right",
+    "align": "left",
   },
   "C": {
     "name": "Cloy",

@@ -14,45 +14,48 @@
 
     <img ng-src="{{ item.nameTitle.face }}"
          ng-show="item.nameTitle.face != null && item.isButton != '1' && item.readed == '1'">
+                <p ng-show="item.isButton != '1' && item.isAudio != '1' && item.readed == '1'"
+                   id="{{ item.nameTitle.id }}">{{ item.text }}</p>
+
+                <!-- IsAudio  -->
+                <div class="button-bar" ng-show="item.isAudio == '1' && item.readed == '1'">
+                    <button ng-click="vm.play('{{item.audio}}');"
+                            class="button icon-left ion-play button-assertive">
+                        {{item.text}}
+                    </button>
+                </div>
 
 
-                    <p ng-show="item.isButton != '1' && item.readed == '1'"
-                       id="{{ item.nameTitle.id }}">{{ item.text }}</p>
-
-
-                    <div class="button-bar" ng-show="item.isButton == '1' && item.readed == '1'">
-                        <div ng-repeat="(buttonKey, buttonValue) in item.buttons"
-                             ng-click="showConfirmStory('{{buttonValue.id}}', '{{key}}', '{{buttonKey}}', '{{item.chatUUID}}', {title: 'Warnung', message: 'Hiermit wird die Story verändert!'})"
-                             ng-if="buttonKey < 3"
-                             ng-class="{'button-positive active': isActive('{{key}}', '{{buttonKey}}', '{{item.clicked}}')}"
-                             class="button button-outline button-block">
-                            {{buttonValue.text}}
-                        </div>
-
-                        <!-- Split-Button
-                        <div uib-dropdown is-open="status.isopen" ng-if="splitButton(key, item.id)">
-                            <a class="button button-outline button-block icon ion-navicon" id="single-button_{{key}}"
-                               type="button" class="btn btn-primary" uib-dropdown-toggle ng-disabled="disabled"></a>
-                            <ul uib-dropdown-menu role="menu" aria-labelledby="single-button_{{key}}">
-                                <li role="menuitem"
-                                    ng-repeat="(buttonKey, buttonValue) in item.buttons"
-                                    ng-if="buttonKey > 2"
-                                    ng-click="showConfirmStory('{{key}}', '{{buttonKey}}', '{{item.parent}}', {title: 'Warnung', message: 'Hiermit wird die Story verändert!'})"
-                                    ng-class="{'button-positive active': isActive('{{key}}', '{{buttonKey}}', '{{item.clicked}}')}">
-                                        <a>{{buttonValue.text}}</a>
-                                        <div ng-class="splitButtonLengthIsMoreThanKey('{{key}}', '{{buttonKey}}') ? 'divider' : ''"></div>
-                                </li>
-                            </ul>
-                        </div>
-                        <!-- Split-Button-Ends here -->
-
+                <!-- IsButton -->
+                <div class="button-bar" ng-show="item.isButton == '1' && item.readed == '1'">
+                    <div ng-repeat="(buttonKey, buttonValue) in item.buttons"
+                         ng-click="showConfirmStory('{{buttonValue.id}}', '{{key}}', '{{buttonKey}}', '{{item.chatUUID}}', {title: 'Warnung', message: 'Hiermit wird die Story verändert!'})"
+                         ng-if="buttonKey < 3"
+                         ng-class="{'button-positive active': isActive('{{key}}', '{{buttonKey}}', '{{item.clicked}}')}"
+                         class="button button-outline button-block">
+                        {{buttonValue.text}}
                     </div>
 
+                    <!-- Split-Button
+                    <div uib-dropdown is-open="status.isopen" ng-if="splitButton(key, item.id)">
+                        <a class="button button-outline button-block icon ion-navicon" id="single-button_{{key}}"
+                           type="button" class="btn btn-primary" uib-dropdown-toggle ng-disabled="disabled"></a>
+                        <ul uib-dropdown-menu role="menu" aria-labelledby="single-button_{{key}}">
+                            <li role="menuitem"
+                                ng-repeat="(buttonKey, buttonValue) in item.buttons"
+                                ng-if="buttonKey > 2"
+                                ng-click="showConfirmStory('{{key}}', '{{buttonKey}}', '{{item.parent}}', {title: 'Warnung', message: 'Hiermit wird die Story verändert!'})"
+                                ng-class="{'button-positive active': isActive('{{key}}', '{{buttonKey}}', '{{item.clicked}}')}">
+                                    <a>{{buttonValue.text}}</a>
+                                    <div ng-class="splitButtonLengthIsMoreThanKey('{{key}}', '{{buttonKey}}') ? 'divider' : ''"></div>
+                            </li>
+                        </ul>
+                    </div>
+                        <!-- Split-Button-Ends here -->
 
-
+                </div>
 
             </ion-item>
-
         </ion-list>
     </ion-content>
 </ion-view>
