@@ -1,21 +1,8 @@
-angular.module('starter.audio', ['ionic', 'ngCordova'])
+var app = angular.module('starter.audio', ['ionic', 'ngCordova']);
 
-    .controller("SoundController", function($scope, $cordovaNativeAudio, $timeout) {
-
-        console.log(1);
+    app.controller("AudioController", function($scope, $cordovaNativeAudio, $timeout, $ionicPlatform) {
         var vm = this;
-
-
         document.addEventListener('deviceready', function(){
-            /*
-            $cordovaNativeAudio
-                .preloadSimple('bass', 'assets/bass.mp3')
-                .then(function (msg) {
-                    console.log(msg);
-                }, function (error) {
-                    alert(error);
-                });
-*/
             if( window.plugins && window.plugins.NativeAudio ) {
                 //$("#audioCanBePlayed").attr('audioCanBePlayed', true).trigger('change');
 
@@ -35,9 +22,4 @@ angular.module('starter.audio', ['ionic', 'ngCordova'])
         };
 
         return vm;
-
-
-        /*
-
-*/
     });

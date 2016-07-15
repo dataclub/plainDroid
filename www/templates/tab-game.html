@@ -18,11 +18,13 @@
                    id="{{ item.nameTitle.id }}">{{ item.text }}</p>
 
                 <!-- IsAudio  -->
-                <div class="button-bar" ng-show="item.isAudio == '1' && item.readed == '1'">
-                    <button ng-click="vm.play('{{item.audio}}');"
-                            class="button icon-left ion-play button-assertive">
-                        {{item.text}}
-                    </button>
+                <div ng-controller="AudioController as vm">
+                    <div class="button-bar" ng-show="item.isAudio == '1' && item.readed == '1'">
+                        <button ng-click="vm.play('{{item.audio}}');"
+                                class="button icon-left ion-play button-assertive">
+                            {{item.text}}
+                        </button>
+                    </div>
                 </div>
 
 
