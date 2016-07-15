@@ -1,0 +1,10 @@
+{
+    "cordova-plugin-nativeaudio": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-nativeaudio"
+        },
+        "is_top_level": true,
+        "variables": {}
+    }
+}
