@@ -893,6 +893,15 @@ angular.module('starter.services', ['ionic', 'ngCordova', 'LocalStorageModule'])
                                 chats[index].content[cIndex].buttons = thisObject.convertListToArray(chats[index].content[cIndex].buttons);
                             }
 
+                            if(typeof(content.nameTitles) != 'undefined'){
+                                var keysOfTitleNames = Object.keys(nameTitles);
+                                keysOfTitleNames.forEach(function(titleKey, keyIndex){
+                                    if(titleKey == content.nameTitles){
+                                        nameTitles[titleKey].id = keysOfTitleNames[keyIndex];
+                                        chats[index].content[cIndex].nameTitle = nameTitles[titleKey];
+                                    }
+                                });
+                            }
                         });
                     }
 

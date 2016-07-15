@@ -1,0 +1,15 @@
+#Z {
+  color: red;
+}
+#J {
+  color: green;
+}
+
+.item-text-right > p {
+  text-align: right;
+
+}
+
+.item-text-center > p {
+  text-align: center;
+}
