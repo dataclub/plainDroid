@@ -6,11 +6,17 @@ var app = angular.module('starter.audio', ['ionic', 'ngCordova']);
             if( window.plugins && window.plugins.NativeAudio ) {
                 //$("#audioCanBePlayed").attr('audioCanBePlayed', true).trigger('change');
 
-                var items = ['bass', 'snare', 'highhat', 'bongo'];
+                var items = ['bass', 'snare', 'highhat', 'bongo', 'ambient'];
                 for(var i=0; i<items.length; i++) {
                     var asset = 'assets/' + items[i] + '.mp3';
-                    $cordovaNativeAudio.preloadSimple(items[i], asset);
+                    $cordovaNativeAudio.preloadComplex(items[i], asset, 1, 1)
+                        .then(function (msg) {
+                            console.log(msg);
+                        }, function (error) {
+                            //alert(error);
+                        });
                 }
+                $cordovaNativeAudio.loop('ambient');
             }
 
 
