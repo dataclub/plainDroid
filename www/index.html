@@ -41,6 +41,7 @@
     <script src="lib/jquery/jquery-1.9.1.min.js"></script>
     <script src="js/typed.js"></script>
     <script src="js/waitForElement.js"></script>
+    <script src="js/jQueryRotate.js"></script>
 
     <script src="js/nameTitles.js"></script>
     <link href="css/nameTitles.css" rel="stylesheet">
@@ -81,10 +82,19 @@
 
     </script>
 
-
+<script>
+    var angle = 0;
+    setInterval(function(){
+        angle+=0.005;
+        $("#image").rotate(angle);
+    },5);
+</script>
 </head>
 
-<body ng-app="starter" class="platform-ios">
+<body ng-app="starter" class="platform-ios" id="bodyImg">
+
+<img style="position: absolute;overflow: hidden;margin: -200px;" src="img/background.png" id="image">
+
 <input type="hidden" id="synchronizeDB" isSynched="false">
 <input type="hidden" id="audioCanBePlayed" audioCanBePlayed="false">
 
