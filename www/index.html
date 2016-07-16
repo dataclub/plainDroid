@@ -25,21 +25,26 @@
     <link href="lib/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 
-
-    <script src="js/nameTitles.js"></script>
-    <link href="css/nameTitles.css" rel="stylesheet">
-
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
 
     <!-- your app's js -->
     <script src="js/app.js"></script>
-    <script src="js/controllers.js"></script>
-    <script src="js/services.js"></script>
-    <script src="js/audio2.js"></script>
+
+    <!-- Controller -->
+    <script src="js/gameController.js"></script>
+    <script src="js/servicesController.js"></script>
+    <script src="js/mapsController.js"></script>
+    <script src="js/settingsController.js"></script>
+    <script src="js/audioController.js"></script>
 
     <script src="lib/jquery/jquery-1.9.1.min.js"></script>
     <script src="js/typed.js"></script>
+    <script src="js/waitForElement.js"></script>
+
+    <script src="js/nameTitles.js"></script>
+    <link href="css/nameTitles.css" rel="stylesheet">
+
     <script>
         $(function () {
 
@@ -74,10 +79,9 @@
         }
 
 
-      // audio.initialize();
     </script>
 
-    <script src="js/waitForElement.js"></script>
+
 </head>
 
 <body ng-app="starter" class="platform-android">
@@ -85,11 +89,7 @@
 <input type="hidden" id="audioCanBePlayed" audioCanBePlayed="false">
 
 
-<!--div ng-controller="AudioController as vm">
-    <button ng-click="vm.play('bass');"
-            class="button icon-left ion-play button-assertive">Play Sound
-    </button>
-</div-->
+
 
 <!--
   The nav bar that will be updated as we navigate between views.
