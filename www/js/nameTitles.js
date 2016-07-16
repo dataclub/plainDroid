@@ -1,23 +1,25 @@
 var nameTitles = {
     "Z": {
-        "name": "Zentrale",
-        "align": "center",
-        "sound": "/sounds/children.mp3"
+      "name": "Zentrale",
+      "align": "center",
+      "sound": "beep"
     },
     "J": {
-        "name": "Jeyson",
-        "align": "left"
+      "name": "Jeyson",
+      "align": "right",
+      "sound": "beep"
     },
     "C": {
-        "name": "Cloy",
-        "align": "right"
+      "name": "Cloy",
+      "align": "left",
+      "sound": "beep"
     },
     "H": {
-        "name": "Helen"
+      "name": "Helen",
+      "align": "left"
     },
 
     "Kom": {
-        "name": "Kommentare"
+      "name": "Kommentare"
     }
-
 };

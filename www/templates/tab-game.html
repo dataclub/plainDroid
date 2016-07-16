@@ -12,9 +12,11 @@
                       type="item-text-wrap"
                       id="ion-item_{{item.id}}">
 
-    <img ng-src="/img/profiles/{{ item.nameTitle.name }}.gif"
-         ng-show="item.nameTitle.faceExists != null && item.isButton != '1' && item.readed == '1'">
-                <p ng-show="item.isButton != '1' && item.isAudio != '1' && item.readed == '1'"
+              <img src="img/profiles/{{item.nameTitle.name}}.gif"
+                   ng-show="item.nameTitle.faceExists == '1' && item.isButton != '1' && item.readed == '1'"/>
+
+
+              <p ng-show="item.isButton != '1' && item.isAudio != '1' && item.readed == '1'"
                    id="{{ item.nameTitle.id }}">{{ item.text }}</p>
 
                 <!-- IsAudio  -->

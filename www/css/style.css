@@ -85,6 +85,14 @@ body {
 
 }
 
+#bla {
+  background-image: url(../img/profiles/Cloy.gif);
+}
+
+.bla2 {
+  background-image: url(../img/profiles/Helen.gif);
+}
+
 a {
     color: #222;
 }
