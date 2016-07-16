@@ -1,30 +1,49 @@
 /* Empty. Add your own CSS if you like */
 .item-avatar > img:first-child, .item-avatar .item-image, .item-avatar .item-content > img:first-child, .item-avatar .item-content .item-image,
-.item-avatar-left > img:first-child, .item-avatar-left .item-image, .item-avatar-left .item-content > img:first-child, .item-avatar-left .item-content .item-image,
+.item-avatar-left > img:first-child, .item-avatar-left .item-image, .item-avatar-left .item-content > img:first-child, .item-avatar-left .item-content .item-image
+{
+    min-width: 70px;
+    min-height: 70px;
+    top: 1px;
+    left: 0px;
+    padding: 3px;
+}
 .item-avatar-right > img:first-child, .item-avatar-right .item-image, .item-avatar-right .item-content > img:first-child, .item-avatar-right .item-content .item-image
 {
     min-width: 70px;
     min-height: 70px;
     top: 1px;
+    right: 0px;
     padding: 3px;
 }
 
 .item-avatar, .item-avatar .item-content,
 .item-avatar-left, .item-avatar-left .item-content
 {
-    padding-left: 105px;
+    padding-left: 72px;
 }
 
 .item-avatar-right,
 .item-avatar-right .item-content {
-    padding-right: 105px;
+    padding-right: 72px;
 }
 
-.tabs-top > .tabs, .tabs.tabs-top
-{
-    top: 0px;
-    position: absolute;
-    height: 62px;
+
+@media (max-width: 350px) {
+    .tabs-top > .tabs, .tabs.tabs-top
+    {
+        top: 3px;
+        position: absolute;
+        height: 50px;
+    }
+}
+@media (min-width: 360px) {
+    .tabs-top > .tabs, .tabs.tabs-top
+    {
+        top: 3px;
+        position: absolute;
+        height: 62px;
+    }
 }
 
 .item, .item h1, .item h2, .item h3, .item h4, .item h5, .item h6, .item p, .item-content, .item-content h1, .item-content h2, .item-content h3, .item-content h4, .item-content h5, .item-content h6, .item-content p
@@ -124,8 +143,9 @@ a {
 
 @media (min-width: 360px) {
     .view-container{
-
+/*
         background-image: url("../img/layout.png");
+        */
 
     }
 
@@ -135,6 +155,7 @@ a {
     .scroll-content{
         margin: 12px;
         margin-bottom: 50px;
+        margin-top:17px;
     }
 
     .tabs-striped .tabs {
@@ -155,5 +176,33 @@ a {
         background: rgba(80,80,100,0.3);
         margin: 20px;
     }
+}
+
+.pane, .view {
+    background-color: transparent;
+}
+.scroll-content{
+    margin: 12px;
+    margin-bottom: 50px;
+    margin-top:17px;
+}
+
+.tabs-striped .tabs {
+    background-color: transparent;
+    border-style: none;
+    margin: 0 auto;
+}
+
+.tab-item {
+    flex: none;
+    width:70px;
+    padding-top:12px;
+    height: 60px;
+}
+
+.item{
+    background-color: transparent;
+    background: rgba(80,80,100,0.3);
+    margin: 20px;
 }
 
