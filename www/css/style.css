@@ -1,4 +1,25 @@
 /* Empty. Add your own CSS if you like */
+.item-avatar > img:first-child, .item-avatar .item-image, .item-avatar .item-content > img:first-child, .item-avatar .item-content .item-image,
+.item-avatar-left > img:first-child, .item-avatar-left .item-image, .item-avatar-left .item-content > img:first-child, .item-avatar-left .item-content .item-image,
+.item-avatar-right > img:first-child, .item-avatar-right .item-image, .item-avatar-right .item-content > img:first-child, .item-avatar-right .item-content .item-image
+{
+    min-width: 70px;
+    min-height: 70px;
+    top: 1px;
+    padding: 3px;
+}
+
+.item-avatar, .item-avatar .item-content,
+.item-avatar-left, .item-avatar-left .item-content
+{
+    padding-left: 105px;
+}
+
+.item-avatar-right,
+.item-avatar-right .item-content {
+    padding-right: 105px;
+}
+
 .tabs-top > .tabs, .tabs.tabs-top
 {
     top: 0px;
@@ -85,13 +106,6 @@ body {
 
 }
 
-#bla {
-  background-image: url(../img/profiles/Cloy.gif);
-}
-
-.bla2 {
-  background-image: url(../img/profiles/Helen.gif);
-}
 
 a {
     color: #222;

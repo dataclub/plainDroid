@@ -2,24 +2,29 @@ var nameTitles = {
     "Z": {
       "name": "Zentrale",
       "align": "center",
-      "sound": "beep"
+      "sound": "beep",
+        "faceExists": 1
     },
     "J": {
       "name": "Jeyson",
       "align": "right",
-      "sound": "beep"
+      "sound": "beep",
+        "faceExists": 1
     },
     "C": {
       "name": "Cloy",
       "align": "left",
-      "sound": "beep"
+      "sound": "beep",
+        "faceExists": 1
     },
     "H": {
       "name": "Helen",
-      "align": "left"
+      "align": "left",
+        "faceExists": 1
     },
 
     "Kom": {
-      "name": "Kommentare"
+      "name": "Kommentare",
+        "faceExists": 0,
     }
 };

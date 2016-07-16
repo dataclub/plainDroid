@@ -127,21 +127,6 @@ angular.module('starter.servicesController', ['ionic', 'ngCordova', 'LocalStorag
 
                 $("#synchronizeDB[issynched='true']").waitUntilExists(function () {
 
-                  document.addEventListener('deviceready', onDeviceReady);
-                  function onDeviceReady()
-                  {
-                    var success = function(status) {
-                      alert('Message: ' + status);
-                    }
-
-                    var error = function(status) {
-                      alert('Error: ' + status);
-                    }
-
-                    window.cache.clear( success, error );
-                    window.cache.cleartemp(); //
-                  }
-
                     //$scope.readedChatsList = DB.get('readedChatsList') ? [] : DB.get('readedChatsList');
 
 
@@ -150,7 +135,7 @@ angular.module('starter.servicesController', ['ionic', 'ngCordova', 'LocalStorag
                     //game.$scope().readedChatsList.addChatListItem(game.getReadedChatsList()[0]);
 
                     game.$scope().data = {chats: ''};
-                    nameTitles = Chats.getNameTitles();
+                    //nameTitles = Chats.getNameTitles();
 
                     if (Chats.getChats().length == 0) {
                         game.$scope().readedChatsList = [];
@@ -906,27 +891,12 @@ angular.module('starter.servicesController', ['ionic', 'ngCordova', 'LocalStorag
             fileExists: function (url) {
               if(url){
                 var req = new XMLHttpRequest();
-                req.open('GET', url, false);
+                req.open('HEAD', url, false);
                 req.send();
                 return req.status==200;
               } else {
                 return false;
               }
-            },
-            getNameTitles: function(){
-                var thisObject = this;
-
-                var keysOfTitleNames = Object.keys(nameTitles);
-                var targetFolder = 'img/profiles/';
-                keysOfTitleNames.forEach(function (titleKey, keyIndex) {
-
-                    var fileFolder = targetFolder+nameTitles[titleKey].name+'.gif';
-                    if(thisObject.fileExists(fileFolder)){
-                        nameTitles[titleKey].faceExists = 1;
-                    }
-                });
-
-                return nameTitles;
             },
             convertListToJSON: function (chats) {
                 var thisObject = this;
