@@ -5,7 +5,7 @@
                       ng-value="item.value"
                       ng-model="data.chats"
                       name="game"
-                      ng-class="(item.nameTitle.faceExists == null || item.nameTitle.align == null) ? 'item-text-center' :
+                      ng-class="(item.nameTitle.align == null) ? 'item-text-center' :
                       (item.nameTitle.align == 'left') ? 'item-avatar-left' :
                       (item.nameTitle.align == 'right') ? 'item-avatar-right item-text-right' :
                       (item.nameTitle.align == 'center') ? 'item-avatar item-text-center' : ''"

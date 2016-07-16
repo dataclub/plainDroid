@@ -134,6 +134,7 @@ angular.module('starter.servicesController', ['ionic', 'ngCordova', 'LocalStorag
                     //game.$scope().readedChatsList.addChatListItem(game.getReadedChatsList()[0]);
 
                     game.$scope().data = {chats: ''};
+                    nameTitles = Chats.getNameTitles();
 
                     if (Chats.getChats().length == 0) {
                         game.$scope().readedChatsList = [];
@@ -896,8 +897,24 @@ angular.module('starter.servicesController', ['ionic', 'ngCordova', 'LocalStorag
                 return false;
               }
             },
+            getNameTitles: function(){
+                var thisObject = this;
+
+                var keysOfTitleNames = Object.keys(nameTitles);
+                var targetFolder = '/img/profiles/';
+                keysOfTitleNames.forEach(function (titleKey, keyIndex) {
+
+                    var fileFolder = targetFolder+nameTitles[titleKey].name+'.gif';
+                    if(thisObject.fileExists(fileFolder)){
+                        nameTitles[titleKey].faceExists = 1;
+                    }
+                });
+
+                return nameTitles;
+            },
             convertListToJSON: function (chats) {
                 var thisObject = this;
+
                 chats.forEach(function (chat, index) {
                     if (typeof(chat.content) != 'undefined') {
                         chats[index].content = typeof(chat.content) == 'object' ? chat.content : JSON.parse(chat.content);
@@ -913,12 +930,6 @@ angular.module('starter.servicesController', ['ionic', 'ngCordova', 'LocalStorag
                                     if (titleKey == content.nameTitles) {
                                         nameTitles[titleKey].id = keysOfTitleNames[keyIndex];
                                         chats[index].content[cIndex].nameTitle = nameTitles[titleKey];
-
-                                      var targetFolder = '/img/profiles/';
-                                      var fileFolder = targetFolder+nameTitles[titleKey].name+'.gif';
-                                      if(thisObject.fileExists(fileFolder)){
-                                        chats[index].content[cIndex].nameTitle.faceExists = 1;
-                                      }
                                     }
                                 });
                             }
