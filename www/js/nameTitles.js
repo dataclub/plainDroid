@@ -6,12 +6,10 @@ var nameTitles = {
     },
     "J": {
         "name": "Jeyson",
-        "face": "/img/ionic.png",
         "align": "left"
     },
     "C": {
         "name": "Cloy",
-        "face": "/img/ionic.png",
         "align": "right"
     },
     "H": {

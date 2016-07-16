@@ -886,6 +886,16 @@ angular.module('starter.servicesController', ['ionic', 'ngCordova', 'LocalStorag
         var ionicScrollDelegate = null;
 
         return {
+            fileExists: function (url) {
+              if(url){
+                var req = new XMLHttpRequest();
+                req.open('GET', url, false);
+                req.send();
+                return req.status==200;
+              } else {
+                return false;
+              }
+            },
             convertListToJSON: function (chats) {
                 var thisObject = this;
                 chats.forEach(function (chat, index) {
@@ -903,6 +913,12 @@ angular.module('starter.servicesController', ['ionic', 'ngCordova', 'LocalStorag
                                     if (titleKey == content.nameTitles) {
                                         nameTitles[titleKey].id = keysOfTitleNames[keyIndex];
                                         chats[index].content[cIndex].nameTitle = nameTitles[titleKey];
+
+                                      var targetFolder = '/img/profiles/';
+                                      var fileFolder = targetFolder+nameTitles[titleKey].name+'.gif';
+                                      if(thisObject.fileExists(fileFolder)){
+                                        chats[index].content[cIndex].nameTitle.faceExists = 1;
+                                      }
                                     }
                                 });
                             }

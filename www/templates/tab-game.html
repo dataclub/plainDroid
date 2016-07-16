@@ -5,15 +5,15 @@
                       ng-value="item.value"
                       ng-model="data.chats"
                       name="game"
-                      ng-class="(item.nameTitle.face == null || item.nameTitle.align == null) ? 'item-text-center' :
+                      ng-class="(item.nameTitle.faceExists == null || item.nameTitle.align == null) ? 'item-text-center' :
                       (item.nameTitle.align == 'left') ? 'item-avatar-left' :
                       (item.nameTitle.align == 'right') ? 'item-avatar-right item-text-right' :
                       (item.nameTitle.align == 'center') ? 'item-avatar item-text-center' : ''"
                       type="item-text-wrap"
                       id="ion-item_{{item.id}}">
 
-    <img ng-src="{{ item.nameTitle.face }}"
-         ng-show="item.nameTitle.face != null && item.isButton != '1' && item.readed == '1'">
+    <img ng-src="/img/profiles/{{ item.nameTitle.name }}.gif"
+         ng-show="item.nameTitle.faceExists != null && item.isButton != '1' && item.readed == '1'">
                 <p ng-show="item.isButton != '1' && item.isAudio != '1' && item.readed == '1'"
                    id="{{ item.nameTitle.id }}">{{ item.text }}</p>
 
