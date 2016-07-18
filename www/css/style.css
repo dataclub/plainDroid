@@ -120,8 +120,8 @@
 
 body {
     font: 16px/20px 'Cutive Mono', serif;
-    background-image: url(../img/background.png);
 
+color: white;
 
 }
 
@@ -195,7 +195,8 @@ a {
 
 .tab-item {
     flex: none;
-    width:70px;
+
+    width: 95px;
     padding-top:12px;
     height: 60px;
 }
@@ -206,3 +207,40 @@ a {
     margin: 20px;
 }
 
+
+
+main { display: flex; min-width: 320px; }
+main > article { order: 2; min-width: 3px; flex:1; }
+main > nav     { order: 1; width: 200px; }
+main > aside   { order: 3; width: 200px; }
+
+
+
+
+.left_header{
+    background-image: url("../img/320x480/320x480_01.gif");
+    background-repeat: no-repeat;
+
+    height: 55px;
+
+    width: 159px;
+    min-width: 159px;
+}
+.middle_header{
+    background-image: url("../img/320x480/320x480_02.gif");
+    float: left;
+    height: 55px;
+
+    width: 100%;
+    background-repeat: repeat-x;
+
+
+}
+
+.right_header{
+    background-image: url("../img/320x480/320x480_03.gif");
+    height: 55px;
+    width: 158px;
+    min-width: 158px;
+
+}

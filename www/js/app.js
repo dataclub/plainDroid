@@ -11,7 +11,7 @@ angular.module('starter',
         'ngCordova',
         'starter.gameController',
         'starter.servicesController',
-        'starter.mapsController',
+        'starter.homeController',
         'starter.settingsController',
         'starter.audioController'
     ])
@@ -64,12 +64,12 @@ angular.module('starter',
                 }
             })
 
-            .state('tab.map', {
-                url: '/map',
+            .state('tab.home', {
+                url: '/home',
                 views: {
-                    'tab-map': {
-                        templateUrl: 'templates/tab-map.html',
-                        controller: 'MapCtrl'
+                    'tab-home': {
+                        templateUrl: 'templates/tab-home.html',
+                        controller: 'HomeCtrl'
                     }
                 }
             })
@@ -87,6 +87,6 @@ angular.module('starter',
         ;
 
         // if none of the above states are matched, use this as the fallback
-        $urlRouterProvider.otherwise('/tab/game');
+        $urlRouterProvider.otherwise('/tab/home');
 
     });

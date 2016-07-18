@@ -1,6 +1,6 @@
-angular.module('starter.mapsController', ['ionic', 'ngCordova', 'ui.bootstrap'])
+angular.module('starter.homeController', ['ionic', 'ngCordova', 'ui.bootstrap'])
 
-    .controller('MapCtrl', function ($scope, Chats) {
+    .controller('HomeCtrl', function ($scope, Chats) {
         // With the new view caching in Ionic, Controllers are only called
         // when they are recreated or on app start, instead of every page change.
         // To listen for when this page is active (for example, to refresh data),
@@ -12,7 +12,7 @@ angular.module('starter.mapsController', ['ionic', 'ngCordova', 'ui.bootstrap'])
 
     })
 
-    .controller('MapDetailCtrl', function ($scope, $stateParams, Chats) {
+    .controller('HomeDetailCtrl', function ($scope, $stateParams, Chats) {
         $scope.chat = Chats.get($stateParams.chatId);
     })
 ;
