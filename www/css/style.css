@@ -118,10 +118,12 @@
 
 @import url(http://fonts.googleapis.com/css?family=Cutive+Mono);
 
-body {
+html,body {
     font: 16px/20px 'Cutive Mono', serif;
 
-color: white;
+    height: 100%;
+    margin: 0;
+    padding: 0;
 
 }
 
@@ -205,42 +207,4 @@ a {
     background-color: transparent;
     background: rgba(80,80,100,0.3);
     margin: 20px;
-}
-
-
-
-main { display: flex; min-width: 320px; }
-main > article { order: 2; min-width: 3px; flex:1; }
-main > nav     { order: 1; width: 200px; }
-main > aside   { order: 3; width: 200px; }
-
-
-
-
-.left_header{
-    background-image: url("../img/320x480/320x480_01.gif");
-    background-repeat: no-repeat;
-
-    height: 55px;
-
-    width: 159px;
-    min-width: 159px;
-}
-.middle_header{
-    background-image: url("../img/320x480/320x480_02.gif");
-    float: left;
-    height: 55px;
-
-    width: 100%;
-    background-repeat: repeat-x;
-
-
-}
-
-.right_header{
-    background-image: url("../img/320x480/320x480_03.gif");
-    height: 55px;
-    width: 158px;
-    min-width: 158px;
-
 }
