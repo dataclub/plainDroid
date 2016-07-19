@@ -85,13 +85,12 @@
 
 </head>
 
-<body ng-app="starter" class="platform-ios">
-<!--input type="hidden" id="synchronizeDB" isSynched="false"-->
+<body ng-app="starter" class="platform-ios" ng-controller="HomeCtrl" animation="slide-left-right-ios7">
+<input type="hidden" id="synchronizeDB" isSynched="false">
 <input type="hidden" id="audioCanBePlayed" audioCanBePlayed="false">
 
 
 <div class="page">
-<!-- header -->
     <div class="header">
         <div class="header_left"></div>
         <div class="header_middle"></div>
@@ -126,6 +125,6 @@
   Templates are in the /templates folder (but you could also
   have templates inline in this html file if you'd like).
 -->
-<!--ion-nav-view></ion-nav-view-->
+<ion-nav-view></ion-nav-view>
 </body>
 </html>
