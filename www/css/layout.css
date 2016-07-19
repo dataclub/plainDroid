@@ -28,18 +28,18 @@
 
 
 .header_left{
-    background-image: url("../img/320x480/320x480_01.png");
+    background-image: url("../img/320x480/png/320x480_01.png");
     background-repeat: no-repeat;
     min-width: 159px;
 }
 .header_middle{
-    background-image: url("../img/320x480/320x480_02.png");
+    background-image: url("../img/320x480/png/320x480_02.png");
     background-repeat: repeat-x;
     width: 100%;
 }
 
 .header_right{
-    background-image: url("../img/320x480/320x480_03.png");
+    background-image: url("../img/320x480/png/320x480_03.png");
     background-repeat: no-repeat;
     min-width: 158px;
 }
@@ -47,19 +47,19 @@
 
 
 .content_left{
-    background-image: url("../img/320x480/320x480_04.png");
+    background-image: url("../img/320x480/png/320x480_04.png");
     background-repeat: no-repeat;
     min-width: 48px;
 }
 .content_middle{
-    background-image: url("../img/320x480/320x480_05.png");
+    background-image: url("../img/320x480/png/320x480_05.png");
     background-repeat: repeat;
     width: 100%;
     min-width: 227px;
 }
 
 .content_right{
-    background-image: url("../img/320x480/320x480_06.png");
+    background-image: url("../img/320x480/png/320x480_06.png");
     background-repeat: no-repeat;
 
     min-width: 45px;
@@ -67,12 +67,12 @@
 
 
 .content_strech_left{
-    background-image: url("../img/320x480/320x480_07.png");
+    background-image: url("../img/320x480/png/320x480_07.png");
     min-width: 48px;
     margin-bottom: 19em;
 }
 .content_strech_middle{
-    background-image: url("../img/320x480/320x480_05.png");
+    background-image: url("../img/320x480/png/320x480_05.png");
     background-repeat: repeat;
     width: 100%;
     min-width: 227px;
@@ -80,7 +80,7 @@
 }
 
 .content_strech_right{
-    background-image: url("../img/320x480/320x480_08.png");
+    background-image: url("../img/320x480/png/320x480_08.png");
     min-width: 45px;
     margin-bottom: 19em;
 }
@@ -88,21 +88,21 @@
 
 
 .footer_left{
-    background-image: url("../img/320x480/320x480_11.png");
+    background-image: url("../img/320x480/png/320x480_13.png");
     background-repeat: no-repeat;
     width: 148px;
     min-width: 148px;
 
 }
 .footer_middle{
-    background-image: url("../img/320x480/320x480_12.png");
+    background-image: url("../img/320x480/png/320x480_14.png");
     background-repeat: repeat-x;
     width: 100%;
 
 }
 
 .footer_right{
-    background-image: url("../img/320x480/320x480_13.png");
+    background-image: url("../img/320x480/png/320x480_15.png");
     background-repeat: no-repeat;
     width: 169px;
     min-width: 169px;
