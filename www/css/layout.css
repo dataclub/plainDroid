@@ -1,41 +1,5 @@
 
-@media screen and (min-width: 0px) {
-    .scroll-content{
-        margin: 45px 28px 65px;
-    }
 
-    .tab-item {
-        flex: 0 0 auto;
-        height: 87px;
-        padding-bottom: 25px;
-        padding-top: 40px;
-        width: 94px;
-    }
-}
-
-@media screen and (min-width: 360px) {
-    .scroll-content{
-        margin: 67px 33px 86px;
-    }
-
-    .tab-item {
-        height: 107px;
-        padding-top: 57px;
-        width: 104px;
-    }
-}
-
-@media screen and (min-width: 768px) {
-    .scroll-content{
-        margin: 164px 80px 140px
-    }
-
-    .tab-item {
-        height: 184px;
-        padding-top: 125px;
-        width: 100px;
-    }
-}
 
 @media screen and (min-width: 0px) {
     .page {

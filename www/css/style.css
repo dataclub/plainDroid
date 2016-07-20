@@ -1,15 +1,14 @@
 /* Empty. Add your own CSS if you like */
 .item-avatar > img:first-child, .item-avatar .item-image, .item-avatar .item-content > img:first-child, .item-avatar .item-content .item-image,
-.item-avatar-left > img:first-child, .item-avatar-left .item-image, .item-avatar-left .item-content > img:first-child, .item-avatar-left .item-content .item-image
-{
+.item-avatar-left > img:first-child, .item-avatar-left .item-image, .item-avatar-left .item-content > img:first-child, .item-avatar-left .item-content .item-image {
     min-width: 70px;
     min-height: 70px;
     top: 1px;
     left: 0px;
     padding: 3px;
 }
-.item-avatar-right > img:first-child, .item-avatar-right .item-image, .item-avatar-right .item-content > img:first-child, .item-avatar-right .item-content .item-image
-{
+
+.item-avatar-right > img:first-child, .item-avatar-right .item-image, .item-avatar-right .item-content > img:first-child, .item-avatar-right .item-content .item-image {
     min-width: 70px;
     min-height: 70px;
     top: 1px;
@@ -18,8 +17,7 @@
 }
 
 .item-avatar, .item-avatar .item-content,
-.item-avatar-left, .item-avatar-left .item-content
-{
+.item-avatar-left, .item-avatar-left .item-content {
     padding-left: 72px;
 }
 
@@ -28,6 +26,7 @@
     padding-right: 72px;
 }
 
+/*
 
 @media (max-width: 350px) {
     .tabs-top > .tabs, .tabs.tabs-top
@@ -45,14 +44,14 @@
         height: 62px;
     }
 }
+*/
 
-.item, .item h1, .item h2, .item h3, .item h4, .item h5, .item h6, .item p, .item-content, .item-content h1, .item-content h2, .item-content h3, .item-content h4, .item-content h5, .item-content h6, .item-content p
-{
+.item, .item h1, .item h2, .item h3, .item h4, .item h5, .item h6, .item p, .item-content, .item-content h1, .item-content h2, .item-content h3, .item-content h4, .item-content h5, .item-content h6, .item-content p {
     white-space: normal;
     color: #fff;
 }
 
-.has-tabs-top{
+.has-tabs-top {
     top: 50px;
 }
 
@@ -69,12 +68,13 @@
     color: blue;
     text-align: center;
 }
+
 .button-bar > .dropdown > .dropdown-menu {
     left: -130px;
 }
 
 /* code for animated blinking cursor */
-.typed-cursor{
+.typed-cursor {
     opacity: 1;
     font-weight: 100;
     -webkit-animation: blink 0.7s infinite;
@@ -83,42 +83,73 @@
     -o-animation: blink 0.7s infinite;
     animation: blink 0.7s infinite;
 }
-@-keyframes blink{
-0% { opacity:1; }
-50% { opacity:0; }
-100% { opacity:1; }
+
+@-keyframes blink {
+0% {
+    opacity: 1;
 }
-@-webkit-keyframes blink{
-    0% { opacity:1; }
-    50% { opacity:0; }
-    100% { opacity:1; }
+50% {
+    opacity: 0;
 }
-@-moz-keyframes blink{
-    0% { opacity:1; }
-    50% { opacity:0; }
-    100% { opacity:1; }
+100% {
+    opacity: 1;
 }
-@-ms-keyframes blink{
-    0% { opacity:1; }
-    50% { opacity:0; }
-    100% { opacity:1; }
 }
-@-o-keyframes blink{
-    0% { opacity:1; }
-    50% { opacity:0; }
-    100% { opacity:1; }
+@-webkit-keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
+
+@-moz-keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@-ms-keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@-o-keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
 .nodisplay {
     display: none;
 }
 
-
-
-
-
 @import url(http://fonts.googleapis.com/css?family=Cutive+Mono);
 
-html,body {
+html, body {
     font: 16px/20px 'Cutive Mono', serif;
 
     height: 100%;
@@ -126,7 +157,6 @@ html,body {
     padding: 0;
 
 }
-
 
 a {
     color: #222;
@@ -143,20 +173,14 @@ a {
     text-align: left;
 }
 
-
-
-
-
-
-
-.view-container{
+.view-container {
     top: 0px;
     left: 0px;
 }
+
 .pane, .view {
     background-color: transparent;
 }
-
 
 .tabs-striped .tabs {
     background-color: transparent;
@@ -164,25 +188,53 @@ a {
     margin: 0 auto;
 }
 
-
-
-.item{
+.item {
     background-color: transparent;
-    background: rgba(80,80,100,0.3);
+    background: rgba(80, 80, 100, 0.3);
     margin: 2px;
 }
 
+.scroll-view {
+    display: none;
+}
 
+@media screen and (min-width: 0px) {
+    .scroll-content {
+        margin: 45px 28px 65px;
+    }
 
+    .tab-item {
+        flex: 0 0 auto;
+        width: 95px;
+    }
 
+}
 
+@media screen and (min-width: 360px) {
+    .scroll-content {
+        margin: 80px 30px 87px;
+    }
 
+    .tab-item {
+        flex: 0 0 auto;
+        height: 75px;
+        width: 100px;
+        padding-top: 25px;
+    }
+}
 
+@media screen and (min-width: 768px) {
+    .scroll-content {
+        margin: 155px 78px 142px;
+    }
 
-
-
-
-
+    .tab-item {
+        flex: 0 0 auto;
+        height: 144px;
+        padding-top: 89px;
+        width: 120px;
+    }
+}
 
 
 
