@@ -156,11 +156,7 @@ a {
 .pane, .view {
     background-color: transparent;
 }
-.scroll-content{
-    margin: 12px;
-    margin-bottom: 65px;
-    margin-top:17px;
-}
+
 
 .tabs-striped .tabs {
     background-color: transparent;
@@ -168,33 +164,50 @@ a {
     margin: 0 auto;
 }
 
-.tab-item {
-    flex: none;
-    width: 90px;
-    padding-top: 25px;
-    padding-bottom: 25px;
-    height: 60px;
 
-}
 
 .item{
     background-color: transparent;
     background: rgba(80,80,100,0.3);
-    margin: 22px;
+    margin: 1px;
 }
 
 
-@media (min-width: 360px) {
+@media (min-width: 320px) {
+    .scroll-content{
+        margin: 45px 28px 65px;
+    }
+
     .tab-item {
-        width: 113px;
+        flex: 0 0 auto;
+        height: 87px;
+        padding-bottom: 25px;
+        padding-top: 40px;
+        width: 94px;
+    }
+}
+
+@media (min-width: 360px) {
+    .scroll-content{
+        margin: 67px 33px 86px;
+    }
+
+    .tab-item {
+        height: 107px;
+        padding-top: 57px;
+        width: 104px;
     }
 }
 
 @media (min-width: 768px) {
+    .scroll-content{
+        margin: 36px 35px 87px;
+    }
+
     .tab-item {
-        width: 410px;
-        padding-top:0px;
         height: 50px;
+        padding-top: 0;
+        width: 138px;
     }
 }
 
