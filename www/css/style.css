@@ -169,7 +169,7 @@ a {
 .item{
     background-color: transparent;
     background: rgba(80,80,100,0.3);
-    margin: 1px;
+    margin: 2px;
 }
 
 
@@ -201,13 +201,13 @@ a {
 
 @media (min-width: 768px) {
     .scroll-content{
-        margin: 36px 35px 87px;
+        margin: 164px 80px 140px
     }
 
     .tab-item {
-        height: 50px;
-        padding-top: 0;
-        width: 138px;
+        height: 184px;
+        padding-top: 125px;
+        width: 100px;
     }
 }
 
